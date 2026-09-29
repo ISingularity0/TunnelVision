@@ -10,6 +10,11 @@ class TunnelVisionConfig : Config() {
 
 	@Expose
 	@JvmField
-	@Category(name = "General", desc = "General settings")
+	@Category(name = "General", desc = "Mining features and HUD settings")
 	var general = GeneralConfig()
+
+	@Expose
+	@JvmField
+	@Category(name = "Dev", desc = "Settings for developing TunnelVision")
+	var dev = DevConfig()
 }

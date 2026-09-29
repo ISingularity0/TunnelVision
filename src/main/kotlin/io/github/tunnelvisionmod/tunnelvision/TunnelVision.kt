@@ -3,6 +3,10 @@ package io.github.tunnelvisionmod.tunnelvision
 import io.github.tunnelvisionmod.tunnelvision.commands.TunnelVisionCommand
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.EventHooks
+import io.github.tunnelvisionmod.tunnelvision.features.mining.PickaxeAbility
+import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
+import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
+import io.github.tunnelvisionmod.tunnelvision.utils.TabList
 import net.fabricmc.api.ClientModInitializer
 import net.minecraft.client.Minecraft
 import org.slf4j.LoggerFactory
@@ -14,7 +18,11 @@ object TunnelVision : ClientModInitializer {
 
 	override fun onInitializeClient() {
 		ConfigManager.load()
+		HudManager.load()
 		EventHooks.register()
+		SkyBlock.register()
+		TabList.register()
+		PickaxeAbility.init()
 		TunnelVisionCommand.register()
 		logger.info("TunnelVision initialized")
 	}
