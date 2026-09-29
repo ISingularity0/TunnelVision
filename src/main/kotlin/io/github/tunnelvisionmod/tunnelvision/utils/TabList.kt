@@ -8,6 +8,8 @@ import io.github.tunnelvisionmod.tunnelvision.mixin.PlayerTabOverlayAccessor
 object TabList {
 	var lines: List<String> = emptyList()
 		private set
+	var footerLines: List<String> = emptyList()
+		private set
 
 	fun register() {
 		EventBus.on<ClientTickEvent> { update() }
@@ -16,10 +18,15 @@ object TabList {
 	private fun update() {
 		if (!SkyBlock.isOnSkyBlock || mc.player == null) {
 			lines = emptyList()
+			footerLines = emptyList()
 			return
 		}
-		lines = (mc.gui.tabList as PlayerTabOverlayAccessor).`tunnelvision$getPlayerInfos`().mapNotNull { info ->
+		val overlay = mc.gui.tabList as PlayerTabOverlayAccessor
+		lines = overlay.`tunnelvision$getPlayerInfos`().mapNotNull { info ->
 			info.tabListDisplayName?.string?.removeFormatting()?.trim()?.takeIf { it.isNotEmpty() }
 		}
+		footerLines = overlay.`tunnelvision$getFooter`()?.string?.removeFormatting()
+			?.lines()?.map { it.trim() }?.filter { it.isNotEmpty() }
+			?: emptyList()
 	}
 }

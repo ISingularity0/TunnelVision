@@ -23,4 +23,10 @@ class GeneralConfig {
 	@ConfigOption(name = "Forge Notification", desc = "Get notified in the Dwarven Mines when something in your Forge is done.")
 	@Accordion
 	var forgeNotification = ForgeNotificationConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mining Effects", desc = "Show the remaining time of Cold Resistance IV and Filet O' Fortune while mining.")
+	@Accordion
+	var miningEffects = MiningEffectsConfig()
 }
