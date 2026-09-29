@@ -20,6 +20,12 @@
 				"adapter": "kotlin",
 				"value": "io.github.tunnelvisionmod.tunnelvision.TunnelVision"
 			}
+		],
+		"modmenu": [
+			{
+				"adapter": "kotlin",
+				"value": "io.github.tunnelvisionmod.tunnelvision.config.ModMenuIntegration"
+			}
 		]
 	},
 	"mixins": [
