@@ -13,12 +13,28 @@ base {
 	archivesName = project.archives_base_name
 }
 
+repositories {
+	maven { url = "https://maven.notenoughupdates.org/releases/" }
+	maven {
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	implementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+
+	implementation "org.notenoughupdates.moulconfig:modern-26.1:${project.moulconfig_version}"
+	include "org.notenoughupdates.moulconfig:modern-26.1:${project.moulconfig_version}"
+
+	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+	localRuntime "maven.modrinth:modmenu:${project.modmenu_version}"
 }
 
 loom {
