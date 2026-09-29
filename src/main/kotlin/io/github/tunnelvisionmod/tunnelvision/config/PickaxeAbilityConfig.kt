@@ -7,6 +7,12 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class PickaxeAbilityConfig {
 	@Expose
 	@JvmField
+	@ConfigOption(name = "Enabled", desc = "Track your pickaxe ability cooldown and notify you when it is ready again.")
+	@ConfigEditorBoolean
+	var enabled = false
+
+	@Expose
+	@JvmField
 	@ConfigOption(name = "Ready Title", desc = "Show a big title on screen when your pickaxe ability is ready again.")
 	@ConfigEditorBoolean
 	var showTitle = true
