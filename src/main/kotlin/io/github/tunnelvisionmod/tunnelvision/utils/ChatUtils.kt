@@ -5,10 +5,9 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 
 object ChatUtils {
-	private val prefix: Component
-		get() = Component.literal("[TunnelVision] ").withStyle(ChatFormatting.AQUA)
+	private val prefix: Component = Component.literal("[TunnelVision] ").withStyle(ChatFormatting.DARK_AQUA)
 
 	fun send(message: Component) {
-		mc.player?.sendSystemMessage(Component.empty().append(prefix).append(message))
+		mc.gui.chat.addClientSystemMessage(Component.empty().append(prefix).append(message))
 	}
 }

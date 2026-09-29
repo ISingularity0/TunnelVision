@@ -20,7 +20,7 @@ class GeneralConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Mineshaft", desc = "Type and corpse count when you enter a Glacite Mineshaft.")
+	@ConfigOption(name = "Forge Notification", desc = "Get notified in the Dwarven Mines when something in your Forge is done.")
 	@Accordion
-	var mineshaft = MineshaftConfig()
+	var forgeNotification = ForgeNotificationConfig()
 }
