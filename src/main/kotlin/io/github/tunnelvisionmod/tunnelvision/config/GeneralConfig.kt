@@ -17,4 +17,10 @@ class GeneralConfig {
 	@ConfigOption(name = "Pickaxe Ability", desc = "Notifications and timer for your pickaxe ability cooldown.")
 	@Accordion
 	var pickaxeAbility = PickaxeAbilityConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mineshaft", desc = "Type and corpse count when you enter a Glacite Mineshaft.")
+	@Accordion
+	var mineshaft = MineshaftConfig()
 }

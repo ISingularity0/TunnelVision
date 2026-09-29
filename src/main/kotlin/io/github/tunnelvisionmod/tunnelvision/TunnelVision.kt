@@ -3,8 +3,10 @@ package io.github.tunnelvisionmod.tunnelvision
 import io.github.tunnelvisionmod.tunnelvision.commands.TunnelVisionCommand
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.EventHooks
+import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
 import io.github.tunnelvisionmod.tunnelvision.features.mining.PickaxeAbility
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
+import io.github.tunnelvisionmod.tunnelvision.utils.Sidebar
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
 import io.github.tunnelvisionmod.tunnelvision.utils.TabList
 import net.fabricmc.api.ClientModInitializer
@@ -22,7 +24,9 @@ object TunnelVision : ClientModInitializer {
 		EventHooks.register()
 		SkyBlock.register()
 		TabList.register()
+		Sidebar.register()
 		PickaxeAbility.init()
+		MineshaftDetection.init()
 		TunnelVisionCommand.register()
 		logger.info("TunnelVision initialized")
 	}
