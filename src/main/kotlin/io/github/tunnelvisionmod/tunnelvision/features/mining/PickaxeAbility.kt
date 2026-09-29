@@ -6,6 +6,7 @@ import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.DisconnectEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
+import io.github.tunnelvisionmod.tunnelvision.events.LocationChangedEvent
 import io.github.tunnelvisionmod.tunnelvision.features.mining.CooldownSync.TICKS_PER_SECOND
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.hud.HudPosition
@@ -30,6 +31,7 @@ object PickaxeAbility {
 		EventBus.on<ClientTickEvent> { onTick() }
 		EventBus.on<ChatReceivedEvent> { onChat(it) }
 		EventBus.on<DisconnectEvent> { reset() }
+		EventBus.on<LocationChangedEvent> { ticksLeft = 0 }
 		HudManager.register(Widget)
 	}
 
@@ -45,8 +47,8 @@ object PickaxeAbility {
 		val seconds = tab.secondsLeft
 		if (seconds == null) {
 			if (ticksLeft > 1) {
-				Debug.log { "PickaxeAbility: ${tab.name} available early via tab" }
-				ticksLeft = 1
+				ticksLeft = CooldownSync.onAvailable(ticksLeft)
+				Debug.log { "PickaxeAbility: ${tab.name} available early via tab, ${if (ticksLeft == 0) "reset silently" else "ready"}" }
 			}
 			return
 		}

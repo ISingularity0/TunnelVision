@@ -30,4 +30,19 @@ class CooldownSyncTest {
 	fun `corrects down when timer is too slow`() {
 		assertEquals(30 * 20, CooldownSync.resync(ticksLeft = 45 * 20, tabSeconds = 30))
 	}
+
+	@Test
+	fun `available near the end still fires ready`() {
+		assertEquals(1, CooldownSync.onAvailable(ticksLeft = 2 * 20))
+	}
+
+	@Test
+	fun `available long before the end resets silently`() {
+		assertEquals(0, CooldownSync.onAvailable(ticksLeft = 16 * 20))
+	}
+
+	@Test
+	fun `available while idle stays idle`() {
+		assertEquals(0, CooldownSync.onAvailable(ticksLeft = 0))
+	}
 }
