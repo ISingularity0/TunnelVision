@@ -9,6 +9,7 @@ import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.BlueCheeseCorps
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.CutLooseTracker
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
 import io.github.tunnelvisionmod.tunnelvision.features.mining.PickaxeAbility
+import io.github.tunnelvisionmod.tunnelvision.features.mining.WrongGearWarning
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.utils.Sidebar
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
@@ -35,6 +36,7 @@ object TunnelVision : ClientModInitializer {
 		MiningEffects.init()
 		BlueCheeseCorpseLock.init()
 		CutLooseTracker.init()
+		WrongGearWarning.init()
 		TunnelVisionCommand.register()
 		logger.info("TunnelVision initialized")
 	}

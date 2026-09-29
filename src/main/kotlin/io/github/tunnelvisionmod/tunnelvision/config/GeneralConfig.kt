@@ -29,4 +29,10 @@ class GeneralConfig {
 	@ConfigOption(name = "Mining Effects", desc = "Show the remaining time of Cold Resistance IV and Filet O' Fortune while mining.")
 	@Accordion
 	var miningEffects = MiningEffectsConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Wrong Gear", desc = "Warn when a Pristine proc is lower than your gear should give.")
+	@Accordion
+	var wrongGear = WrongGearConfig()
 }
