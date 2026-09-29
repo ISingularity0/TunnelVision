@@ -1,4 +1,4 @@
-package io.github.tunnelvisionmod.tunnelvision.features.mining
+package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 enum class CorpseType(private val helmetId: String, private val helmetName: String) {
 	LAPIS("LAPIS_ARMOR_HELMET", "Lapis Armor Helmet"),

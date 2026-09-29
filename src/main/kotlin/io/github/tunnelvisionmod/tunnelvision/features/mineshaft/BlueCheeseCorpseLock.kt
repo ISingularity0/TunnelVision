@@ -1,4 +1,4 @@
-package io.github.tunnelvisionmod.tunnelvision.features.mining
+package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
@@ -20,11 +20,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.EntityHitResult
 
 object BlueCheeseCorpseLock {
-	private const val MINESHAFT_ISLAND = "mineshaft"
 	private const val UPGRADE_MODULE_KEY = "drill_part_upgrade_module"
 	private const val WARNING_COOLDOWN_MS = 1000L
 
-	private val config get() = ConfigManager.config.general.blueCheeseCorpseLock
+	private val config get() = ConfigManager.config.mineshaft.blueCheeseCorpseLock
 
 	private var lastWarning = 0L
 
@@ -33,7 +32,7 @@ object BlueCheeseCorpseLock {
 	}
 
 	private fun onRightClick(event: RightClickEvent) {
-		if (!config.enabled || !SkyBlock.isOnSkyBlock || SkyBlock.island != MINESHAFT_ISLAND) return
+		if (!config.enabled || !SkyBlock.isInMineshaft) return
 		val player = mc.player ?: return
 		val corpse = targetedCorpse() ?: return
 		if (player.mainHandItem.hasBlueCheese()) return
