@@ -1,0 +1,50 @@
+name: Bug report
+description: Something is broken, crashes, or behaves wrong
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Join ...
+        2. Open ...
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: mod-version
+    attributes:
+      label: TunnelVision version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: mc-version
+    attributes:
+      label: Minecraft version
+      placeholder: "26.1.2"
+    validations:
+      required: true
+  - type: input
+    id: loader-version
+    attributes:
+      label: Fabric Loader / Fabric API version
+      placeholder: "0.19.5 / 0.155.3+26.1.2"
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other mods installed
+      description: A list or a link to your modpack. Write "none" if it happens with only TunnelVision.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Crash report / latest.log
+      description: Upload the file or paste a link (mclo.gs). Found in `.minecraft/crash-reports` and `.minecraft/logs`.
