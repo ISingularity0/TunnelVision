@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component
 object MineshaftDetection {
 	private const val MINESHAFT_ISLAND = "mineshaft"
 
-	private val config get() = ConfigManager.config.general.mineshaft
+	private val config get() = ConfigManager.config.mineshaft.mineshaftType
 
 	/** The current mineshaft, or null when not in one (or not identified yet). */
 	var type: MineshaftType? = null
