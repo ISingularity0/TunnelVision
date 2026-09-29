@@ -11,6 +11,7 @@ import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacke
 
 object SkyBlock {
 	private const val MINESHAFT_ISLAND = "mineshaft"
+	private const val DWARVEN_MINES_ISLAND = "mining_3"
 
 	var isOnSkyBlock = false
 		private set
@@ -18,6 +19,7 @@ object SkyBlock {
 		private set
 
 	val isInMineshaft: Boolean get() = isOnSkyBlock && island == MINESHAFT_ISLAND
+	val isInDwarvenMines: Boolean get() = isOnSkyBlock && island == DWARVEN_MINES_ISLAND
 
 	fun register() {
 		val api = HypixelModAPI.getInstance()

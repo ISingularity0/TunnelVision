@@ -17,4 +17,10 @@ class GeneralConfig {
 	@ConfigOption(name = "Pickaxe Ability", desc = "Notifications and timer for your pickaxe ability cooldown.")
 	@Accordion
 	var pickaxeAbility = PickaxeAbilityConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Forge Notification", desc = "Get notified in the Dwarven Mines when something in your Forge is done.")
+	@Accordion
+	var forgeNotification = ForgeNotificationConfig()
 }
