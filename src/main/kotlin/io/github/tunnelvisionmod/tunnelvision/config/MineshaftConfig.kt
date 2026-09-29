@@ -16,4 +16,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Cut Loose Tracker", desc = "Track your kills for the Cut Loose perk from the Fossil Essence Shop.")
 	@Accordion
 	var cutLooseTracker = CutLooseTrackerConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mineshaft Type", desc = "Type and corpse count when you enter a Glacite Mineshaft.")
+	@Accordion
+	var mineshaftType = MineshaftTypeConfig()
 }
