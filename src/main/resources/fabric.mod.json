@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "tunnelvision",
+	"version": "${version}",
+	"name": "TunnelVision",
+	"description": "",
+	"authors": [
+		"TunnelVisionMod"
+	],
+	"contact": {
+		"homepage": "https://github.com/TunnelVisionMod/TunnelVision",
+		"sources": "https://github.com/TunnelVisionMod/TunnelVision",
+		"issues": "https://github.com/TunnelVisionMod/TunnelVision/issues"
+	},
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			{
+				"adapter": "kotlin",
+				"value": "io.github.tunnelvisionmod.tunnelvision.TunnelVision"
+			}
+		]
+	},
+	"mixins": [
+		"tunnelvision.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"fabric-language-kotlin": ">=1.14.1+kotlin.2.4.20"
+	}
+}
