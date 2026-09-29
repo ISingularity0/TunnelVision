@@ -3,6 +3,7 @@
 	"package": "io.github.tunnelvisionmod.tunnelvision.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"PlayerTabOverlayAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

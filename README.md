@@ -11,6 +11,7 @@ A client-side Fabric mod for Minecraft 26.1.2.
 - [Fabric Loader](https://fabricmc.net/use/) 0.19.5+
 - [Fabric API](https://modrinth.com/mod/fabric-api)
 - [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin)
+- [Hypixel Mod API](https://modrinth.com/mod/hypixel-mod-api)
 
 ## Installation
 
