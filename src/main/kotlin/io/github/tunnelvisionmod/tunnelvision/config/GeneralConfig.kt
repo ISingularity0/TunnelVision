@@ -17,4 +17,10 @@ class GeneralConfig {
 	@ConfigOption(name = "Pickaxe Ability", desc = "Notifications and timer for your pickaxe ability cooldown.")
 	@Accordion
 	var pickaxeAbility = PickaxeAbilityConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Blue Cheese Corpse Lock", desc = "Only allow looting corpses with your Blue Cheese drill.")
+	@Accordion
+	var blueCheeseCorpseLock = BlueCheeseCorpseLockConfig()
 }

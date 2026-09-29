@@ -34,7 +34,7 @@ object PickaxeAbility {
 	}
 
 	private fun onTick() {
-		if (!SkyBlock.isOnSkyBlock) return
+		if (!config.enabled || !SkyBlock.isOnSkyBlock) return
 		rememberHeldMiningTool()
 		PickaxeAbilityParser.parseTab(TabList.lines)?.let { syncWithTab(it) }
 		if (ticksLeft > 0 && --ticksLeft == 0) onReady()
@@ -56,7 +56,7 @@ object PickaxeAbility {
 	}
 
 	private fun onChat(event: ChatReceivedEvent) {
-		if (!SkyBlock.isOnSkyBlock) return
+		if (!config.enabled || !SkyBlock.isOnSkyBlock) return
 		val name = PickaxeAbilityParser.parseUsedMessage(event.text) ?: return
 		ability = name
 		if (PickaxeAbilityParser.parseTab(TabList.lines) != null) return
@@ -96,7 +96,7 @@ object PickaxeAbility {
 			.append(Component.literal("${seconds}s").withStyle(ChatFormatting.YELLOW))
 
 	object Widget : HudWidget("pickaxe_ability_timer", "Pickaxe Ability Timer", HudPosition(0.02f, 0.4f)) {
-		override val isEnabled get() = config.showWidget
+		override val isEnabled get() = config.enabled && config.showWidget
 
 		override fun getLines(): List<Component> {
 			val name = ability ?: return emptyList()
