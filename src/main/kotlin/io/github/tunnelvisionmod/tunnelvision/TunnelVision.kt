@@ -7,6 +7,7 @@ import io.github.tunnelvisionmod.tunnelvision.features.effects.MiningEffects
 import io.github.tunnelvisionmod.tunnelvision.features.forge.ForgeNotification
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.BlueCheeseCorpseLock
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.CutLooseTracker
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.LanternReminder
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftWaypoints
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.SharedMineshaftWarp
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
@@ -14,9 +15,11 @@ import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftPartyShar
 import io.github.tunnelvisionmod.tunnelvision.features.mining.PickaxeAbility
 import io.github.tunnelvisionmod.tunnelvision.features.mining.WrongGearWarning
 import io.github.tunnelvisionmod.tunnelvision.features.party.PartyCommands
+import io.github.tunnelvisionmod.tunnelvision.features.stats.MiningStats
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.utils.Sidebar
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
+import io.github.tunnelvisionmod.tunnelvision.utils.Storage
 import io.github.tunnelvisionmod.tunnelvision.utils.TabList
 import net.fabricmc.api.ClientModInitializer
 import net.minecraft.client.Minecraft
@@ -30,6 +33,7 @@ object TunnelVision : ClientModInitializer {
 	override fun onInitializeClient() {
 		ConfigManager.load()
 		HudManager.load()
+		Storage.load()
 		EventHooks.register()
 		SkyBlock.register()
 		TabList.register()
@@ -45,6 +49,8 @@ object TunnelVision : ClientModInitializer {
 		WrongGearWarning.init()
 		PartyCommands.init()
 		SharedMineshaftWarp.init()
+		MiningStats.init()
+		LanternReminder.init()
 		TunnelVisionCommand.register()
 		logger.info("TunnelVision initialized")
 	}

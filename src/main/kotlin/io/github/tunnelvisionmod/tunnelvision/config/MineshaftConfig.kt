@@ -40,4 +40,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Mineshaft Waypoints", desc = "Waypoints for possible corpse spots, found corpses and the fossil.")
 	@Accordion
 	var mineshaftWaypoints = MineshaftWaypointsConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Lantern Reminder", desc = "Remind you to place your Will-o'-wisp or Glacite Lantern and warn when it expires.")
+	@Accordion
+	var lanternReminder = LanternReminderConfig()
 }
