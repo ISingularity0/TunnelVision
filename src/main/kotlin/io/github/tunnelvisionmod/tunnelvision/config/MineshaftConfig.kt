@@ -22,4 +22,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Mineshaft Type", desc = "Type and corpse count when you enter a Glacite Mineshaft.")
 	@Accordion
 	var mineshaftType = MineshaftTypeConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Party Share", desc = "Tell your party which mineshaft you entered and what corpses it has.")
+	@Accordion
+	var partyShare = MineshaftPartyShareConfig()
 }
