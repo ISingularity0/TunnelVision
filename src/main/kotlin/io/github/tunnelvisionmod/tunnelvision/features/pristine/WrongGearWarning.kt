@@ -1,4 +1,4 @@
-package io.github.tunnelvisionmod.tunnelvision.features.mining
+package io.github.tunnelvisionmod.tunnelvision.features.pristine
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager

@@ -38,6 +38,12 @@ class GeneralConfig {
 
 	@Expose
 	@JvmField
+	@ConfigOption(name = "Hide Pristine Messages", desc = "Hide the \"PRISTINE! You found ...\" spam from chat.")
+	@Accordion
+	var hidePristineMessages = HidePristineConfig()
+
+	@Expose
+	@JvmField
 	@ConfigOption(name = "Party Commands", desc = "Run !ptme and !warp from party chat.")
 	@Accordion
 	var partyCommands = PartyCommandsConfig()
