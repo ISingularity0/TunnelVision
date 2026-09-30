@@ -20,7 +20,7 @@ class MineshaftValueConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Lapis Only", desc = "Only count Lapis corpses, for when you skip the corpses that need a key. With fewer than 2 counted corpses it always says DON'T MINE, except for Jasper.")
+	@ConfigOption(name = "Lapis Only", desc = "Only count Lapis corpses, for when you skip the corpses that need a key. Also used by Corpses to Loot. With fewer than 2 counted corpses it always says DON'T MINE, except for Jasper.")
 	@ConfigEditorBoolean
 	var lapisOnly = false
 

@@ -42,6 +42,8 @@ object MineshaftWaypoints {
 	private val config get() = ConfigManager.config.mineshaft.mineshaftWaypoints
 	private val spots by lazy { MineshaftSpots.load() }
 	private val state = WaypointState()
+
+	val hasPendingFossil: Boolean get() = config.enabled && started && state.fossil != null
 	private val visibleChecks = mutableMapOf<Pos, Int>()
 	private val isQuartz = mutableMapOf<Block, Boolean>()
 

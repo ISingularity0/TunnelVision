@@ -68,6 +68,8 @@ object CrystalNotifications {
 	 */
 	private var stateKnown = false
 
+	private var testOverride = false
+
 	fun init() {
 		EventBus.on<ClientTickEvent> { onTick() }
 		EventBus.on<ChatReceivedEvent> { onChat(it) }
@@ -77,6 +79,7 @@ object CrystalNotifications {
 			forgeFull = null
 			lastHotmStates = null
 			stateKnown = false
+			testOverride = false
 			entryPending = false
 			fullMessageSent = false
 		}
@@ -114,8 +117,10 @@ object CrystalNotifications {
 	private fun onTick() {
 		if (!SkyBlock.isOnSkyBlock) return
 
-		CrystalParser.parseTab(TabList.lines)?.let { tracker.apply(it) }
-		readHotmMenu()
+		if (!testOverride) {
+			CrystalParser.parseTab(TabList.lines)?.let { tracker.apply(it) }
+			readHotmMenu()
+		}
 		readForge()
 
 		if (entryPending) tryEntryNotification()
@@ -149,6 +154,7 @@ object CrystalNotifications {
 	 */
 	fun setCarriedForTesting(states: Map<CrystalType, Boolean>) {
 		stateKnown = true
+		testOverride = true
 		tracker.apply(states)
 		Debug.log { "Crystals: test state " + tracker.carried.map { it.displayName } }
 	}

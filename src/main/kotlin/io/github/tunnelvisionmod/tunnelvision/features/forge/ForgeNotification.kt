@@ -51,13 +51,13 @@ object ForgeNotification {
 		Debug.log { "ForgeNotification: ready $items" }
 		if (config.showTitle) {
 			mc.gui.setTimes(0, 50, 10)
-			mc.gui.setSubtitle(Component.literal(items.joinToString(", ")).withStyle(ChatFormatting.YELLOW))
+			mc.gui.setSubtitle(Component.literal(ForgeSummary.subtitle(items)).withStyle(ChatFormatting.YELLOW))
 			mc.gui.setTitle(Component.literal("FORGE READY!").withStyle(ChatFormatting.GOLD))
 		}
 		if (config.sendChat) {
 			val verb = if (items.size == 1) "is" else "are"
 			ChatUtils.send(
-				Component.literal(items.joinToString(", ")).withStyle(ChatFormatting.YELLOW)
+				Component.literal(ForgeSummary.grouped(items).joinToString(", ")).withStyle(ChatFormatting.YELLOW)
 					.append(Component.literal(" $verb ready in the Forge!").withStyle(ChatFormatting.GREEN))
 			)
 		}

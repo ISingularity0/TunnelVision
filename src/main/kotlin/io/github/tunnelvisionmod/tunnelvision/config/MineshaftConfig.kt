@@ -52,4 +52,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Mineshaft Value", desc = "Tell you whether you should mine the gemstones in a mineshaft, based on the Fine gemstone price and the number of corpses.")
 	@Accordion
 	var mineshaftValue = MineshaftValueConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mineshaft To-Do", desc = "Widget showing which corpses are worth looting and whether the fossil still needs mining. Disappears when everything is done.")
+	@Accordion
+	var corpsesToLoot = CorpsesToLootConfig()
 }

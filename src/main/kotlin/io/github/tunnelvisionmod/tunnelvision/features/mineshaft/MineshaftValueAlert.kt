@@ -32,22 +32,27 @@ object MineshaftValueAlert {
 		Bazaar.refreshIfStale()
 		if (done || !SkyBlock.isInMineshaft) return
 		val type = MineshaftDetection.type ?: return
-		val gemstone = GemstoneShaft.of(type)
-		if (gemstone == null) {
+		if (GemstoneShaft.of(type) == null) {
 			done = true
 			return
 		}
-		val corpses = MineshaftParser.parseCorpses(TabList.lines)?.let { MineshaftValue.countedCorpses(it, config.lapisOnly) } ?: return
-		val prices = Bazaar.price(gemstone.fineGemId) ?: return
+		val verdict = currentVerdict() ?: return
+		done = true
+		Debug.log { "MineshaftValue: ${type.code}, lapis only: ${config.lapisOnly}, crystals full: ${CrystalNotifications.crystalsAndForgeFull}, $verdict" }
+		announce(verdict)
+	}
+
+	fun currentVerdict(): MineshaftVerdict? {
+		if (!SkyBlock.isInMineshaft) return null
+		val type = MineshaftDetection.type ?: return null
+		val gemstone = GemstoneShaft.of(type) ?: return null
+		val corpses = MineshaftParser.parseCorpses(TabList.lines)?.let { MineshaftValue.countedCorpses(it, config.lapisOnly) } ?: return null
+		val prices = Bazaar.price(gemstone.fineGemId) ?: return null
 		val price = when (config.priceType) {
 			BazaarPriceType.SELL_OFFER -> prices.sellOffer
 			BazaarPriceType.INSTANT_SELL -> prices.instantSell
 		}
-		val crystalsFull = CrystalNotifications.crystalsAndForgeFull
-		val verdict = MineshaftValue.evaluate(type, corpses, crystalsFull, price) ?: return
-		done = true
-		Debug.log { "MineshaftValue: ${type.code}, $corpses counted corpses${if (config.lapisOnly) " (lapis only)" else ""}, crystals full: $crystalsFull, $verdict" }
-		announce(verdict)
+		return MineshaftValue.evaluate(type, corpses, CrystalNotifications.crystalsAndForgeFull, price)
 	}
 
 	private fun announce(verdict: MineshaftVerdict) {
