@@ -36,7 +36,6 @@ object MineshaftWaypoints {
 	private const val SPOT_COLOR = 0xFFFFFFFF.toInt()
 	private const val FOSSIL_COLOR = 0xFFB040FF.toInt()
 	private const val FILL_ALPHA = 0x50
-	private const val BEAM_ALPHA = 0x30
 
 	private val lootMessage = Regex("""^(LAPIS|UMBER|TUNGSTEN|VANGUARD) CORPSE LOOT!""")
 
@@ -163,7 +162,6 @@ object MineshaftWaypoints {
 			val color = corpse.type.color()
 			WorldRender.filled(context, box, color.withAlpha(FILL_ALPHA))
 			WorldRender.outline(context, box, color, throughWalls = true)
-			WorldRender.beam(context, box, color.withAlpha(BEAM_ALPHA))
 			label(context, box, "${corpse.type.displayName()} Corpse", color, eye)
 		}
 		state.fossil?.let { fossil ->

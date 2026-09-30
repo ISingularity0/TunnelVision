@@ -11,6 +11,9 @@ class StorageData {
 
 	@field:Expose
 	var skyMallDay: Long = -1
+
+	@field:Expose
+	var forgeFull: Boolean? = null
 }
 
 object Storage {

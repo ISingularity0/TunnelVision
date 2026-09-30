@@ -14,6 +14,7 @@ import io.github.tunnelvisionmod.tunnelvision.hud.HudWidget
 import io.github.tunnelvisionmod.tunnelvision.utils.ChatUtils
 import io.github.tunnelvisionmod.tunnelvision.utils.Debug
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
+import io.github.tunnelvisionmod.tunnelvision.utils.Storage
 import io.github.tunnelvisionmod.tunnelvision.utils.TabList
 import io.github.tunnelvisionmod.tunnelvision.utils.loreLines
 import io.github.tunnelvisionmod.tunnelvision.utils.plainName
@@ -51,7 +52,7 @@ object CrystalNotifications {
 	private var forgeFull: Boolean? = null
 
 	/** True when every crystal is carried and the forge has no open slot. For other features. */
-	val crystalsAndForgeFull: Boolean get() = tracker.hasAll && forgeFull == true
+	val crystalsAndForgeFull: Boolean get() = tracker.hasAll && (forgeFull ?: Storage.data.forgeFull) == true
 
 	/** The crystals you are carrying, for other features. */
 	val carriedCrystals: Set<CrystalType> get() = tracker.carried
@@ -164,7 +165,12 @@ object CrystalNotifications {
 	 * "you have no Ruby crystal" wrongly strips the one you are holding now.
 	 */
 	private fun readForge() {
-		forgeFull = ForgeParser.parseStatus(TabList.lines)?.isFull ?: return
+		val full = ForgeParser.parseStatus(TabList.lines)?.isFull ?: return
+		forgeFull = full
+		if (Storage.data.forgeFull != full) {
+			Storage.data.forgeFull = full
+			Storage.save()
+		}
 	}
 
 	private fun tryEntryNotification() {
