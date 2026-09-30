@@ -6,6 +6,8 @@ import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.DisconnectEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
 import io.github.tunnelvisionmod.tunnelvision.events.LocationChangedEvent
+import io.github.tunnelvisionmod.tunnelvision.events.MineshaftEnteredEvent
+import io.github.tunnelvisionmod.tunnelvision.events.post
 import io.github.tunnelvisionmod.tunnelvision.utils.ChatUtils
 import io.github.tunnelvisionmod.tunnelvision.utils.Debug
 import io.github.tunnelvisionmod.tunnelvision.utils.Sidebar
@@ -64,6 +66,7 @@ object MineshaftDetection {
 		type = detected
 		announced = true
 		announce(detected)
+		MineshaftEnteredEvent(detected).post()
 	}
 
 	private fun announce(mineshaft: MineshaftType) {

@@ -47,4 +47,10 @@ class GeneralConfig {
 	@ConfigOption(name = "Party Commands", desc = "Run !ptme and !warp from party chat.")
 	@Accordion
 	var partyCommands = PartyCommandsConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mining Stats", desc = "Sky Mall, Mineshaft Mayhem, Fortunate Freezing and Cold Resistance at a glance.")
+	@Accordion
+	var miningStats = MiningStatsConfig()
 }
