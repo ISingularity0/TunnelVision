@@ -51,7 +51,7 @@ class MineshaftPartyShareTest {
 	@Test
 	fun `message format`() {
 		assertEquals(
-			"Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1, Umber 1",
+			"!ptme Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1, Umber 1",
 			MineshaftPartyShare.buildMessage(MineshaftType.JASPER, mapOf("Lapis" to 2, "Tungsten" to 1, "Umber" to 1)),
 		)
 	}
@@ -59,7 +59,7 @@ class MineshaftPartyShareTest {
 	@Test
 	fun `message with a single corpse`() {
 		assertEquals(
-			"Mineshafttype: TOPA_1, Corpses: Lapis 1",
+			"!ptme Mineshafttype: TOPA_1, Corpses: Lapis 1",
 			MineshaftPartyShare.buildMessage(MineshaftType.TOPAZ_1, mapOf("Lapis" to 1)),
 		)
 	}

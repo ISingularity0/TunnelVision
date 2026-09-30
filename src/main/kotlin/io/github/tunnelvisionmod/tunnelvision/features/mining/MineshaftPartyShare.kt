@@ -12,7 +12,7 @@ import io.github.tunnelvisionmod.tunnelvision.utils.TabList
 
 /**
  * Announces the mineshaft you just entered to your party, e.g.
- * `Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1`.
+ * `!ptme Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1`.
  *
  * Sent once per mineshaft, and only once the corpse widget has stopped changing - the party
  * cannot un-see a message sent off a half-filled widget.
@@ -61,10 +61,10 @@ object MineshaftPartyShare {
 		mc.connection?.sendCommand("pc $message")
 	}
 
-	/** e.g. `Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1, Umber 1` */
+	/** e.g. `!ptme Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1, Umber 1` */
 	fun buildMessage(type: MineshaftType, corpses: Map<String, Int>): String {
 		val breakdown = corpses.entries.joinToString(", ") { (name, count) -> "$name $count" }
-		return "Mineshafttype: ${type.code}, Corpses: $breakdown"
+		return "!ptme Mineshafttype: ${type.code}, Corpses: $breakdown"
 	}
 
 	private fun reset() {

@@ -10,7 +10,7 @@ class MineshaftPartyShareConfig {
 	@ConfigOption(
 		name = "Enabled",
 		desc = "Send the mineshaft type and its corpses to your party chat once per mineshaft, " +
-			"e.g. \"Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1\". This posts publicly to your party.",
+			"e.g. \"!ptme Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1\". This posts publicly to your party.",
 	)
 	@ConfigEditorBoolean
 	var enabled = false
