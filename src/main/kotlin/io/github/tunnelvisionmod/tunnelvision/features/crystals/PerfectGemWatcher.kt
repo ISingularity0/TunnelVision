@@ -1,0 +1,22 @@
+package io.github.tunnelvisionmod.tunnelvision.features.crystals
+
+import io.github.tunnelvisionmod.tunnelvision.features.forge.ForgeSlot
+
+class PerfectGemWatcher {
+	private val perfectGem = Regex("""^Perfect (\w+) Gemstone$""")
+	private var known: Map<Int, String>? = null
+
+	fun newPerfectGems(slots: List<ForgeSlot>): List<CrystalType> {
+		val current = slots.associate { it.slot to it.item }
+		val previous = known
+		known = current
+		if (previous == null) return emptyList()
+		return current.filter { (slot, item) -> previous[slot] != item }
+			.values
+			.mapNotNull { item -> perfectGem.matchEntire(item)?.groupValues?.get(1)?.let { CrystalType.byDisplayName(it) } }
+	}
+
+	fun reset() {
+		known = null
+	}
+}

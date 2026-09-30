@@ -47,6 +47,7 @@ object CrystalNotifications {
 
 	private val config get() = ConfigManager.config.general.crystalNotifications
 	private val tracker = CrystalTracker()
+	private val perfectGems = PerfectGemWatcher()
 
 	/** Null while the Forges widget has not been seen, so "unknown" never reads as "full". */
 	private var forgeFull: Boolean? = null
@@ -80,6 +81,7 @@ object CrystalNotifications {
 			lastHotmStates = null
 			stateKnown = false
 			testOverride = false
+			perfectGems.reset()
 			entryPending = false
 			fullMessageSent = false
 		}
@@ -117,6 +119,7 @@ object CrystalNotifications {
 	private fun onTick() {
 		if (!SkyBlock.isOnSkyBlock) return
 
+		if (testOverride && !ConfigManager.config.dev.debugMode) endTesting()
 		if (!testOverride) {
 			CrystalParser.parseTab(TabList.lines)?.let { tracker.apply(it) }
 			readHotmMenu()
@@ -152,6 +155,11 @@ object CrystalNotifications {
 	 * Pretends a crystal was picked up or spent, so the notifications and the widget can be tested
 	 * without going and finding one. Driven by `/tv crystal`.
 	 */
+	fun endTesting() {
+		testOverride = false
+		Debug.log { "Crystals: test mode off, using real data again" }
+	}
+
 	fun setCarriedForTesting(states: Map<CrystalType, Boolean>) {
 		stateKnown = true
 		testOverride = true
@@ -171,7 +179,11 @@ object CrystalNotifications {
 	 * "you have no Ruby crystal" wrongly strips the one you are holding now.
 	 */
 	private fun readForge() {
-		val full = ForgeParser.parseStatus(TabList.lines)?.isFull ?: return
+		val status = ForgeParser.parseStatus(TabList.lines) ?: return
+		for (crystal in perfectGems.newPerfectGems(status.slots)) {
+			if (tracker.consumed(crystal)) Debug.log { "Crystals: spent " + crystal.displayName + " (perfect gemstone started in the forge)" }
+		}
+		val full = status.isFull
 		forgeFull = full
 		if (Storage.data.forgeFull != full) {
 			Storage.data.forgeFull = full
