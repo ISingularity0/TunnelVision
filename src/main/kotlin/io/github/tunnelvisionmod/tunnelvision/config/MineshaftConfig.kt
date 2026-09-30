@@ -22,4 +22,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Mineshaft Type", desc = "Type and corpse count when you enter a Glacite Mineshaft.")
 	@Accordion
 	var mineshaftType = MineshaftTypeConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mineshaft Waypoints", desc = "Waypoints for possible corpse spots, found corpses and the fossil.")
+	@Accordion
+	var mineshaftWaypoints = MineshaftWaypointsConfig()
 }

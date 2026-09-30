@@ -7,13 +7,10 @@ import io.github.tunnelvisionmod.tunnelvision.events.RightClickEvent
 import io.github.tunnelvisionmod.tunnelvision.utils.Debug
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
 import io.github.tunnelvisionmod.tunnelvision.utils.customData
-import io.github.tunnelvisionmod.tunnelvision.utils.plainName
-import io.github.tunnelvisionmod.tunnelvision.utils.skyblockId
 import net.minecraft.ChatFormatting
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
@@ -43,10 +40,7 @@ object BlueCheeseCorpseLock {
 
 	private fun targetedCorpse(): CorpseType? {
 		val stand = (mc.hitResult as? EntityHitResult)?.entity as? ArmorStand ?: return null
-		if (stand.isInvisible) return null
-		val helmet = stand.getItemBySlot(EquipmentSlot.HEAD)
-		if (helmet.isEmpty) return null
-		return CorpseType.fromHelmet(helmet.skyblockId(), helmet.plainName())
+		return stand.corpseType()
 	}
 
 	private fun ItemStack.hasBlueCheese(): Boolean =
