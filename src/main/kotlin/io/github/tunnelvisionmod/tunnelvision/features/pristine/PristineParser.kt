@@ -1,4 +1,4 @@
-package io.github.tunnelvisionmod.tunnelvision.features.mining
+package io.github.tunnelvisionmod.tunnelvision.features.pristine
 
 data class PristineProc(val gemstone: String, val amount: Int)
 

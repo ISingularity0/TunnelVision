@@ -12,8 +12,9 @@ import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.SharedMineshaft
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftPartyShare
 import io.github.tunnelvisionmod.tunnelvision.features.mining.PickaxeAbility
-import io.github.tunnelvisionmod.tunnelvision.features.mining.WrongGearWarning
 import io.github.tunnelvisionmod.tunnelvision.features.party.PartyCommands
+import io.github.tunnelvisionmod.tunnelvision.features.pristine.HidePristineMessages
+import io.github.tunnelvisionmod.tunnelvision.features.pristine.WrongGearWarning
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.utils.Sidebar
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
@@ -43,6 +44,7 @@ object TunnelVision : ClientModInitializer {
 		MineshaftWaypoints.init()
 		MineshaftPartyShare.init()
 		WrongGearWarning.init()
+		HidePristineMessages.init()
 		PartyCommands.init()
 		SharedMineshaftWarp.init()
 		TunnelVisionCommand.register()
