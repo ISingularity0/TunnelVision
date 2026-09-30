@@ -71,6 +71,31 @@ class MineshaftValueTest {
 	}
 
 	@Test
+	fun `counts all corpses by default`() {
+		assertEquals(4, MineshaftValue.countedCorpses(mapOf("Lapis" to 2, "Umber" to 1, "Tungsten" to 1), lapisOnly = false))
+	}
+
+	@Test
+	fun `lapis only counts lapis corpses`() {
+		assertEquals(2, MineshaftValue.countedCorpses(mapOf("Lapis" to 2, "Umber" to 1, "Tungsten" to 1), lapisOnly = true))
+		assertEquals(0, MineshaftValue.countedCorpses(mapOf("Umber" to 2), lapisOnly = true))
+	}
+
+	@Test
+	fun `fewer than two corpses means dont mine`() {
+		val verdict = MineshaftValue.evaluate(MineshaftType.OPAL, corpses = 1, crystalsFull = false, price = 1_000_000.0)!!
+		assertFalse(verdict.shouldMine)
+		assertNull(verdict.threshold)
+	}
+
+	@Test
+	fun `jasper is always worth mining below two corpses`() {
+		val verdict = MineshaftValue.evaluate(MineshaftType.JASPER, corpses = 0, crystalsFull = false, price = 1.0)!!
+		assertTrue(verdict.shouldMine)
+		assertNull(verdict.threshold)
+	}
+
+	@Test
 	fun `no verdict for other mineshafts`() {
 		assertNull(MineshaftValue.evaluate(MineshaftType.UMBER, corpses = 3, crystalsFull = false, price = 1_000_000.0))
 	}

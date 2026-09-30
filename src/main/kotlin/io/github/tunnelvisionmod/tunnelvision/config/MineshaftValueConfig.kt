@@ -20,6 +20,12 @@ class MineshaftValueConfig {
 
 	@Expose
 	@JvmField
+	@ConfigOption(name = "Lapis Only", desc = "Only count Lapis corpses, for when you skip the corpses that need a key. With fewer than 2 counted corpses it always says DON'T MINE, except for Jasper.")
+	@ConfigEditorBoolean
+	var lapisOnly = false
+
+	@Expose
+	@JvmField
 	@ConfigOption(name = "Chat Message", desc = "Also send the verdict with price and threshold to chat.")
 	@ConfigEditorBoolean
 	var sendChat = true

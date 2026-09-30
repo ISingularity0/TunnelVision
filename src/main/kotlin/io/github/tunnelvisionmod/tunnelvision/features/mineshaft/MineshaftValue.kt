@@ -29,7 +29,7 @@ enum class GemstoneShaft(
 	}
 
 	companion object {
-		private const val MIN_CORPSES = 2
+		const val MIN_CORPSES = 2
 
 		fun of(type: MineshaftType): GemstoneShaft? = entries.firstOrNull { type.code.startsWith(it.codePrefix) }
 	}
@@ -40,11 +40,17 @@ private val BP7_FULL = listOf(28_300, 26_900, 25_600)
 private val BP9_AVAILABLE = listOf(59_200, 56_200, 53_400)
 private val BP9_FULL = listOf(50_300, 47_800, 45_500)
 
-data class MineshaftVerdict(val gemstone: GemstoneShaft, val price: Double, val threshold: Int, val shouldMine: Boolean)
+data class MineshaftVerdict(val gemstone: GemstoneShaft, val price: Double, val threshold: Int?, val shouldMine: Boolean)
 
 object MineshaftValue {
+	private const val LAPIS = "Lapis"
+
+	fun countedCorpses(corpses: Map<String, Int>, lapisOnly: Boolean): Int =
+		if (lapisOnly) corpses[LAPIS] ?: 0 else corpses.values.sum()
+
 	fun evaluate(type: MineshaftType, corpses: Int, crystalsFull: Boolean, price: Double): MineshaftVerdict? {
 		val gemstone = GemstoneShaft.of(type) ?: return null
+		if (corpses < GemstoneShaft.MIN_CORPSES) return MineshaftVerdict(gemstone, price, threshold = null, shouldMine = gemstone == GemstoneShaft.JASPER)
 		val threshold = gemstone.threshold(corpses, crystalsFull)
 		return MineshaftVerdict(gemstone, price, threshold, price >= threshold)
 	}

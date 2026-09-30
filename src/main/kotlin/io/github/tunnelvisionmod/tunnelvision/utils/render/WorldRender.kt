@@ -26,9 +26,6 @@ import kotlin.math.max
 
 object WorldRender {
 	private const val LINE_WIDTH = 2f
-	private const val BEAM_HEIGHT = 120.0
-	private const val BEAM_INSET = 0.35
-	private const val BEAM_GAP = 1.5
 	private const val LABEL_BASE_SCALE = 0.03f
 	private const val LABEL_SCALE_DISTANCE = 8.0
 	private const val LABEL_BACKGROUND = 0x90000000.toInt()
@@ -106,10 +103,6 @@ object WorldRender {
 			quad(x0, y0, z0, x0, y0, z1, x0, y1, z1, x0, y1, z0)
 			quad(x1, y0, z0, x1, y1, z0, x1, y1, z1, x1, y0, z1)
 		}
-	}
-
-	fun beam(context: LevelRenderContext, box: AABB, color: Int) {
-		filled(context, AABB(box.minX + BEAM_INSET, box.maxY + BEAM_GAP, box.minZ + BEAM_INSET, box.maxX - BEAM_INSET, box.maxY + BEAM_GAP + BEAM_HEIGHT, box.maxZ - BEAM_INSET), color)
 	}
 
 	fun label(context: LevelRenderContext, pos: Vec3, text: Component, color: Int) {
