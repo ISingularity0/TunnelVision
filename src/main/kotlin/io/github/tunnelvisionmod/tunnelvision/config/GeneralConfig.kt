@@ -35,4 +35,10 @@ class GeneralConfig {
 	@ConfigOption(name = "Wrong Gear", desc = "Warn when a Pristine proc is lower than your gear should give.")
 	@Accordion
 	var wrongGear = WrongGearConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Party Commands", desc = "Run !ptme and !warp from party chat.")
+	@Accordion
+	var partyCommands = PartyCommandsConfig()
 }
