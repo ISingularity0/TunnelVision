@@ -44,6 +44,12 @@ class GeneralConfig {
 
 	@Expose
 	@JvmField
+	@ConfigOption(name = "Crystal Notifications", desc = "Notify you when a crystal is waiting to be forged.")
+	@Accordion
+	var crystalNotifications = CrystalNotificationsConfig()
+
+	@Expose
+	@JvmField
 	@ConfigOption(name = "Party Commands", desc = "Run !ptme and !warp from party chat.")
 	@Accordion
 	var partyCommands = PartyCommandsConfig()
