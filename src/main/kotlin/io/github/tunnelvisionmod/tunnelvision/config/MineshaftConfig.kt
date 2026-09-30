@@ -34,4 +34,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Shared Mineshaft Warp", desc = "Warp into a mineshaft a party member shared with one key press.")
 	@Accordion
 	var sharedMineshaftWarp = SharedMineshaftWarpConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mineshaft Waypoints", desc = "Waypoints for possible corpse spots, found corpses and the fossil.")
+	@Accordion
+	var mineshaftWaypoints = MineshaftWaypointsConfig()
 }
