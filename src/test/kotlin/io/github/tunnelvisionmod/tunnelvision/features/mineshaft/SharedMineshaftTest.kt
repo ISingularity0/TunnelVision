@@ -1,5 +1,6 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
+import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftPartyShare
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -22,6 +23,12 @@ class SharedMineshaftTest {
 			SharedMineshaft(MineshaftType.UMBER, "Lapis 1"),
 			SharedMineshaftParser.parse("!ptme Mineshafttype: UMBE_1, Corpses: Lapis 1"),
 		)
+	}
+
+	@Test
+	fun `understands the party share message`() {
+		val message = MineshaftPartyShare.buildMessage(MineshaftType.JASPER, mapOf("Lapis" to 2, "Tungsten" to 1))
+		assertEquals(SharedMineshaft(MineshaftType.JASPER, "Lapis 2, Tungsten 1"), SharedMineshaftParser.parse(message))
 	}
 
 	@Test
