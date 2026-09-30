@@ -15,7 +15,7 @@ class WrongGearConfig {
 	@Expose
 	@JvmField
 	@ConfigOption(name = "Low Proc", desc = "Warn when a Pristine proc gives this many gemstones or fewer. Set this just under what your correct gear normally drops.")
-	@ConfigEditorSlider(minValue = 1f, maxValue = 10f, minStep = 1f)
+	@ConfigEditorSlider(minValue = 1f, maxValue = 25f, minStep = 1f)
 	var lowProc = 2
 
 	@Expose
