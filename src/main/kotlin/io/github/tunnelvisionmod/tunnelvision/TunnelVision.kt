@@ -8,6 +8,7 @@ import io.github.tunnelvisionmod.tunnelvision.features.forge.ForgeNotification
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.BlueCheeseCorpseLock
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.CutLooseTracker
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.LanternReminder
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftValueAlert
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftWaypoints
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.SharedMineshaftWarp
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
@@ -53,6 +54,7 @@ object TunnelVision : ClientModInitializer {
 		SharedMineshaftWarp.init()
 		MiningStats.init()
 		LanternReminder.init()
+		MineshaftValueAlert.init()
 		TunnelVisionCommand.register()
 		logger.info("TunnelVision initialized")
 	}

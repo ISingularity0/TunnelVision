@@ -46,4 +46,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Lantern Reminder", desc = "Remind you to place your Will-o'-wisp or Glacite Lantern and warn when it expires.")
 	@Accordion
 	var lanternReminder = LanternReminderConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Mineshaft Value", desc = "Tell you whether you should mine the gemstones in a mineshaft, based on the Fine gemstone price and the number of corpses.")
+	@Accordion
+	var mineshaftValue = MineshaftValueConfig()
 }
