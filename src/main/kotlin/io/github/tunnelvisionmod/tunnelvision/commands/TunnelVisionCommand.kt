@@ -33,9 +33,11 @@ object TunnelVisionCommand {
 	/**
 	 * Crystals are rare enough that waiting to find one is no way to test the notifications, so
 	 * this pretends you carry them. `/tv crystal all`, `/tv crystal none`, `/tv crystal <name>` to
-	 * toggle one, and `/tv crystal entry` to replay the entry notification.
+	 * toggle one, `/tv crystal off` to go back to the real data, and `/tv crystal entry` to replay the
+	 * entry notification.
 	 */
 	private fun crystalCommand() = literal("crystal")
+		.requires { ConfigManager.config.dev.debugMode }
 		.executes {
 			showCarried()
 			1
@@ -43,6 +45,11 @@ object TunnelVisionCommand {
 		.then(literal("all").executes {
 			CrystalNotifications.setCarriedForTesting(CrystalType.entries.associateWith { true })
 			showCarried()
+			1
+		})
+		.then(literal("off").executes {
+			CrystalNotifications.endTesting()
+			ChatUtils.send(Component.literal("Crystal test mode off, the tab list and /hotm are used again.").withStyle(ChatFormatting.GREEN))
 			1
 		})
 		.then(literal("none").executes {
