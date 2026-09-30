@@ -6,6 +6,7 @@ import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
 import io.github.tunnelvisionmod.tunnelvision.events.LocationChangedEvent
+import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalNotifications
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftParser
 import io.github.tunnelvisionmod.tunnelvision.utils.Bazaar
@@ -42,9 +43,10 @@ object MineshaftValueAlert {
 			BazaarPriceType.SELL_OFFER -> prices.sellOffer
 			BazaarPriceType.INSTANT_SELL -> prices.instantSell
 		}
-		val verdict = MineshaftValue.evaluate(type, corpses, crystalsFull = false, price = price) ?: return
+		val crystalsFull = CrystalNotifications.crystalsAndForgeFull
+		val verdict = MineshaftValue.evaluate(type, corpses, crystalsFull, price) ?: return
 		done = true
-		Debug.log { "MineshaftValue: ${type.code}, $corpses counted corpses${if (config.lapisOnly) " (lapis only)" else ""}, $verdict" }
+		Debug.log { "MineshaftValue: ${type.code}, $corpses counted corpses${if (config.lapisOnly) " (lapis only)" else ""}, crystals full: $crystalsFull, $verdict" }
 		announce(verdict)
 	}
 

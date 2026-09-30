@@ -3,6 +3,7 @@ package io.github.tunnelvisionmod.tunnelvision
 import io.github.tunnelvisionmod.tunnelvision.commands.TunnelVisionCommand
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.EventHooks
+import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalNotifications
 import io.github.tunnelvisionmod.tunnelvision.features.effects.MiningEffects
 import io.github.tunnelvisionmod.tunnelvision.features.forge.ForgeNotification
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.BlueCheeseCorpseLock
@@ -22,6 +23,7 @@ import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.utils.Sidebar
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
 import io.github.tunnelvisionmod.tunnelvision.utils.Storage
+import io.github.tunnelvisionmod.tunnelvision.utils.TabDump
 import io.github.tunnelvisionmod.tunnelvision.utils.TabList
 import net.fabricmc.api.ClientModInitializer
 import net.minecraft.client.Minecraft
@@ -39,10 +41,12 @@ object TunnelVision : ClientModInitializer {
 		EventHooks.register()
 		SkyBlock.register()
 		TabList.register()
+		TabDump.register()
 		Sidebar.register()
 		PickaxeAbility.init()
 		MineshaftDetection.init()
 		ForgeNotification.init()
+		CrystalNotifications.init()
 		MiningEffects.init()
 		BlueCheeseCorpseLock.init()
 		CutLooseTracker.init()
