@@ -22,4 +22,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Mineshaft Type", desc = "Type and corpse count when you enter a Glacite Mineshaft.")
 	@Accordion
 	var mineshaftType = MineshaftTypeConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Shared Mineshaft Warp", desc = "Warp into a mineshaft a party member shared with one key press.")
+	@Accordion
+	var sharedMineshaftWarp = SharedMineshaftWarpConfig()
 }
