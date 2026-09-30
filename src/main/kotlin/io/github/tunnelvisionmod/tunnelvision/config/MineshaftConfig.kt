@@ -28,4 +28,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Party Share", desc = "Tell your party which mineshaft you entered and what corpses it has.")
 	@Accordion
 	var partyShare = MineshaftPartyShareConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Shared Mineshaft Warp", desc = "Warp into a mineshaft a party member shared with one key press.")
+	@Accordion
+	var sharedMineshaftWarp = SharedMineshaftWarpConfig()
 }
