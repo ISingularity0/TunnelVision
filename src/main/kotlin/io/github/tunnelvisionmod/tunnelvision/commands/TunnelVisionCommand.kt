@@ -5,7 +5,6 @@ import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalNotificat
 import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalType
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.utils.ChatUtils
-import io.github.tunnelvisionmod.tunnelvision.utils.TabDump
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal
 import net.minecraft.ChatFormatting
@@ -23,14 +22,6 @@ object TunnelVisionCommand {
 						}
 						.then(literal("hud").executes {
 							HudManager.openEditor()
-							1
-						})
-						.then(literal("dumptab").executes {
-							TabDump.dump()
-							1
-						})
-						.then(literal("dumpgui").executes {
-							TabDump.dumpGui()
 							1
 						})
 						.then(crystalCommand())
