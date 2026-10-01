@@ -7,11 +7,7 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class MineshaftPartyShareConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(
-		name = "Enabled",
-		desc = "Send the mineshaft type and its corpses to your party chat once per mineshaft, " +
-			"e.g. \"!ptme Mineshafttype: JASP_1, Corpses: Lapis 2, Tungsten 1\". This posts publicly to your party.",
-	)
+	@ConfigOption(name = "Enabled", desc = "Send the mineshaft type and corpses to party chat.")
 	@ConfigEditorBoolean
 	var enabled = false
 }

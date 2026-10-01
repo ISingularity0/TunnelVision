@@ -13,13 +13,13 @@ class PickaxeAbilityConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Ready Title", desc = "Show a big title on screen when your pickaxe ability is ready again.")
+	@ConfigOption(name = "Ready Title", desc = "Show a title when your pickaxe ability is ready.")
 	@ConfigEditorBoolean
 	var showTitle = true
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Ready Sound", desc = "Play a sound when your pickaxe ability is ready again.")
+	@ConfigOption(name = "Ready Sound", desc = "Play a sound when your pickaxe ability is ready.")
 	@ConfigEditorBoolean
 	var playSound = true
 

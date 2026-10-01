@@ -7,13 +7,13 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class ForgeNotificationConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Enabled", desc = "Notify you in the Dwarven Mines when something in your Forge is done. Requires the Forges tab widget (/widget).")
+	@ConfigOption(name = "Enabled", desc = "Notify you when something is done forging. §bRequires the Forges tab widget (/widget).")
 	@ConfigEditorBoolean
 	var enabled = false
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Ready Title", desc = "Show a big title with the finished items.")
+	@ConfigOption(name = "Ready Title", desc = "Show a title with the finished items.")
 	@ConfigEditorBoolean
 	var showTitle = true
 

@@ -13,25 +13,25 @@ class MiningStatsConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Sky Mall", desc = "Current Sky Mall buff, on every mining island. Open /hotm once if it is unknown.")
+	@ConfigOption(name = "Sky Mall", desc = "Your current Sky Mall buff. §bMay require opening /hotm once.")
 	@ConfigEditorBoolean
 	var skyMall = true
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Mineshaft Mayhem", desc = "The buff you got from Mineshaft Mayhem, in Glacite Mineshafts.")
+	@ConfigOption(name = "Mineshaft Mayhem", desc = "Your Mineshaft Mayhem buff.")
 	@ConfigEditorBoolean
 	var mayhem = true
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Mining Event", desc = "The Fortunate Freezing fortune bonus (Glacite Mineshafts), or the speed and fortune from Better Together (all mining islands).")
+	@ConfigOption(name = "Mining Event", desc = "Fortunate Freezing or Better Together bonus.")
 	@ConfigEditorBoolean
 	var miningEvent = true
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Cold Resistance", desc = "Your Cold Resistance in Glacite Mineshafts. Requires Cold Resistance in the tab list Stats widget (/widget).")
+	@ConfigOption(name = "Cold Resistance", desc = "Your Cold Resistance. §bRequires Cold Resistance in the Stats tab widget (/widget).")
 	@ConfigEditorBoolean
 	var coldResistance = true
 }

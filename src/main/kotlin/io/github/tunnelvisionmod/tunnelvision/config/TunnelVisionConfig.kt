@@ -15,11 +15,11 @@ class TunnelVisionConfig : Config() {
 
 	@Expose
 	@JvmField
-	@Category(name = "Mineshaft", desc = "Glacite Mineshaft features")
+	@Category(name = "Mineshaft", desc = "Features inside of Mineshafts")
 	var mineshaft = MineshaftConfig()
 
 	@Expose
 	@JvmField
-	@Category(name = "Dev", desc = "Settings for developing TunnelVision")
+	@Category(name = "Dev", desc = "Don't touch")
 	var dev = DevConfig()
 }

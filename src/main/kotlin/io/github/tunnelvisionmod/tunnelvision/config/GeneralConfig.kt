@@ -8,7 +8,7 @@ import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 
 class GeneralConfig {
 	@JvmField
-	@ConfigOption(name = "HUD Editor", desc = "Move and resize all TunnelVision HUD widgets. Also available via /tv hud.")
+	@ConfigOption(name = "HUD Editor", desc = "Move HUD widgets. Also available via §b/tv hud§7.")
 	@ConfigEditorButton(buttonText = "Open")
 	val openHudEditor = Runnable { HudManager.openEditor() }
 
@@ -20,7 +20,7 @@ class GeneralConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Forge Notification", desc = "Get notified in the Dwarven Mines when something in your Forge is done.")
+	@ConfigOption(name = "Forge Notification", desc = "Get notified when something is done forging.")
 	@Accordion
 	var forgeNotification = ForgeNotificationConfig()
 
@@ -56,7 +56,7 @@ class GeneralConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Mining Stats", desc = "Sky Mall, Mineshaft Mayhem, Fortunate Freezing and Cold Resistance at a glance.")
+	@ConfigOption(name = "Mining Stats", desc = "Your current mining buffs at a glance.")
 	@Accordion
 	var miningStats = MiningStatsConfig()
 }
