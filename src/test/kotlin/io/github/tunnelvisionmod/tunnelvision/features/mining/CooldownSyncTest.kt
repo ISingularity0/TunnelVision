@@ -1,7 +1,9 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mining
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class CooldownSyncTest {
@@ -33,16 +35,30 @@ class CooldownSyncTest {
 
 	@Test
 	fun `available near the end still fires ready`() {
-		assertEquals(1, CooldownSync.onAvailable(ticksLeft = 2 * 20))
+		assertTrue(CooldownSync.firesOnAvailable(ticksLeft = 2 * 20))
+		assertTrue(CooldownSync.firesOnAvailable(ticksLeft = 1))
 	}
 
 	@Test
 	fun `available long before the end resets silently`() {
-		assertEquals(0, CooldownSync.onAvailable(ticksLeft = 16 * 20))
+		assertFalse(CooldownSync.firesOnAvailable(ticksLeft = 16 * 20))
 	}
 
 	@Test
 	fun `available while idle stays idle`() {
-		assertEquals(0, CooldownSync.onAvailable(ticksLeft = 0))
+		assertFalse(CooldownSync.firesOnAvailable(ticksLeft = 0))
+	}
+
+	@Test
+	fun `waits for a lagging server instead of counting up`() {
+		assertTrue(CooldownSync.isAheadOfServer(ticksLeft = 10 * 20, tabSeconds = 12))
+		assertTrue(CooldownSync.isAheadOfServer(ticksLeft = 1, tabSeconds = 2))
+	}
+
+	@Test
+	fun `keeps counting within tab rounding`() {
+		assertFalse(CooldownSync.isAheadOfServer(ticksLeft = 10 * 20, tabSeconds = 11))
+		assertFalse(CooldownSync.isAheadOfServer(ticksLeft = 1, tabSeconds = 1))
+		assertFalse(CooldownSync.isAheadOfServer(ticksLeft = 30 * 20, tabSeconds = 20))
 	}
 }

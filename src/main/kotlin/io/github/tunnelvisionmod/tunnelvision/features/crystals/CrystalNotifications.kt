@@ -42,7 +42,15 @@ object CrystalNotifications {
 	 */
 	private const val ENTRY_TIMEOUT_TICKS = 100
 
-	/** The tab widget cannot list every crystal, so the HotM menu is the only complete source. */
+	/**
+	 * A forge slot can only be started from the Forge menus, so a Perfect gem that shows up with
+	 * none of them open recently is the tab widget reloading, not a crystal being spent.
+	 */
+	private const val FORGE_MENU_WINDOW_TICKS = 200
+	private val forgeMenuTitles = setOf("The Forge", "Forging", "Confirm Process")
+	private const val FORGE_SELECT_PREFIX = "Select Process ("
+
+	/** The HotM menu is the only complete source of which crystals you carry. */
 	private const val HOTM_TITLE = "Heart of the Mountain"
 
 	private val config get() = ConfigManager.config.general.crystalNotifications
@@ -62,6 +70,8 @@ object CrystalNotifications {
 	private var entryTicks = 0
 	private var fullMessageSent = false
 	private var lastHotmStates: Map<CrystalType, Boolean>? = null
+	private var lastForgeItems: List<Pair<Int, String>>? = null
+	private var ticksSinceMenu = FORGE_MENU_WINDOW_TICKS + 1
 
 	/**
 	 * The menu has to have been read once before anything we say about crystals is meaningful.
@@ -79,6 +89,7 @@ object CrystalNotifications {
 			tracker.reset()
 			forgeFull = null
 			lastHotmStates = null
+			lastForgeItems = null
 			stateKnown = false
 			testOverride = false
 			perfectGems.reset()
@@ -120,10 +131,10 @@ object CrystalNotifications {
 		if (!SkyBlock.isOnSkyBlock) return
 
 		if (testOverride && !ConfigManager.config.dev.debugMode) endTesting()
-		if (!testOverride) {
-			CrystalParser.parseTab(TabList.lines)?.let { tracker.apply(it) }
-			readHotmMenu()
-		}
+		if (!testOverride) readHotmMenu()
+		val menuTitle = (mc.screen as? AbstractContainerScreen<*>)?.title?.string?.removeFormatting()?.trim()
+		val inForgeMenu = menuTitle != null && (menuTitle in forgeMenuTitles || menuTitle.startsWith(FORGE_SELECT_PREFIX))
+		ticksSinceMenu = if (inForgeMenu) 0 else (ticksSinceMenu + 1).coerceAtMost(FORGE_MENU_WINDOW_TICKS + 1)
 		readForge()
 
 		if (entryPending) tryEntryNotification()
@@ -132,7 +143,7 @@ object CrystalNotifications {
 
 	/**
 	 * The Heart of the Mountain menu lists every crystal in the lore of one item, so whatever it
-	 * says replaces what the (too small) tab widget and chat could tell us.
+	 * says replaces what chat and the forge could tell us.
 	 */
 	private fun readHotmMenu() {
 		val screen = mc.screen as? AbstractContainerScreen<*> ?: return
@@ -180,8 +191,18 @@ object CrystalNotifications {
 	 */
 	private fun readForge() {
 		val status = ForgeParser.parseStatus(TabList.lines) ?: return
+		val items = status.slots.map { it.slot to it.item }
+		if (items != lastForgeItems) {
+			lastForgeItems = items
+			Debug.log { "Crystals: forge slots $items" }
+		}
 		for (crystal in perfectGems.newPerfectGems(status.slots)) {
-			if (tracker.consumed(crystal)) Debug.log { "Crystals: spent " + crystal.displayName + " (perfect gemstone started in the forge)" }
+			if (ticksSinceMenu > FORGE_MENU_WINDOW_TICKS) {
+				Debug.log { "Crystals: perfect " + crystal.displayName + " appeared in the forge without the Forge menu, ignored" }
+				continue
+			}
+			val spent = tracker.consumed(crystal)
+			Debug.log { "Crystals: perfect " + crystal.displayName + " started in the forge, " + if (spent) "spent" else "was not carried" }
 		}
 		val full = status.isFull
 		forgeFull = full

@@ -25,30 +25,46 @@ object PickaxeAbility {
 
 	private var ability: String? = null
 	private var ticksLeft = 0
+	private var waitingTicks = 0
 	private var lastMiningToolLore: List<String>? = null
 
 	fun init() {
 		EventBus.on<ClientTickEvent> { onTick() }
 		EventBus.on<ChatReceivedEvent> { onChat(it) }
 		EventBus.on<DisconnectEvent> { reset() }
-		EventBus.on<LocationChangedEvent> { ticksLeft = 0 }
+		EventBus.on<LocationChangedEvent> { stop() }
 		HudManager.register(Widget)
 	}
 
 	private fun onTick() {
 		if (!config.enabled || !SkyBlock.isOnSkyBlock) return
 		rememberHeldMiningTool()
-		PickaxeAbilityParser.parseTab(TabList.lines)?.let { syncWithTab(it) }
-		if (ticksLeft > 0 && --ticksLeft == 0) onReady()
+		val tab = PickaxeAbilityParser.parseTab(TabList.lines)
+		tab?.let { syncWithTab(it) }
+		countDown(tab?.secondsLeft)
+	}
+
+	private fun countDown(tabSeconds: Int?) {
+		if (ticksLeft <= 0) return
+		if (tabSeconds != null && CooldownSync.isAheadOfServer(ticksLeft, tabSeconds)) return
+		if (ticksLeft > 1) {
+			ticksLeft--
+			waitingTicks = 0
+			return
+		}
+		if (++waitingTicks < CooldownSync.READY_GRACE_TICKS) return
+		Debug.log { "PickaxeAbility: no available message from the server, ready anyway" }
+		ready()
 	}
 
 	private fun syncWithTab(tab: TabAbility) {
 		ability = tab.name
 		val seconds = tab.secondsLeft
 		if (seconds == null) {
-			if (ticksLeft > 1) {
-				ticksLeft = CooldownSync.onAvailable(ticksLeft)
-				Debug.log { "PickaxeAbility: ${tab.name} available early via tab, ${if (ticksLeft == 0) "reset silently" else "ready"}" }
+			if (ticksLeft > 0) {
+				val fire = CooldownSync.firesOnAvailable(ticksLeft)
+				Debug.log { "PickaxeAbility: ${tab.name} available via tab, ${if (fire) "ready" else "reset silently"}" }
+				if (fire) ready() else stop()
 			}
 			return
 		}
@@ -59,6 +75,13 @@ object PickaxeAbility {
 
 	private fun onChat(event: ChatReceivedEvent) {
 		if (!config.enabled || !SkyBlock.isOnSkyBlock) return
+		PickaxeAbilityParser.parseAvailableMessage(event.text)?.let { name ->
+			if (ticksLeft > 0 && (ability == null || name == ability)) {
+				Debug.log { "PickaxeAbility: $name available via chat" }
+				ready()
+			}
+			return
+		}
 		val name = PickaxeAbilityParser.parseUsedMessage(event.text) ?: return
 		ability = name
 		if (PickaxeAbilityParser.parseTab(TabList.lines) != null) return
@@ -66,6 +89,16 @@ object PickaxeAbility {
 		val seconds = PickaxeAbilityParser.parseLoreCooldown(lore) ?: return
 		Debug.log { "PickaxeAbility: Cooldown($name, ${seconds}s) via lore" }
 		ticksLeft = seconds * TICKS_PER_SECOND
+	}
+
+	private fun stop() {
+		ticksLeft = 0
+		waitingTicks = 0
+	}
+
+	private fun ready() {
+		stop()
+		onReady()
 	}
 
 	private fun onReady() {
@@ -89,7 +122,7 @@ object PickaxeAbility {
 
 	private fun reset() {
 		ability = null
-		ticksLeft = 0
+		stop()
 		lastMiningToolLore = null
 	}
 

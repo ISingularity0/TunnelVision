@@ -19,6 +19,11 @@ class ForgeParserTest {
 	}
 
 	@Test
+	fun `strips the gemstone icon from item names`() {
+		assertEquals(listOf(ForgeSlot(1, "Perfect Opal Gemstone", false)), ForgeParser.parseTab(tab("1)  Perfect Opal Gemstone: 19h 59m")))
+	}
+
+	@Test
 	fun `accepts uppercase ready`() {
 		assertEquals(listOf(ForgeSlot(1, "Refined Mithril", true)), ForgeParser.parseTab(tab("1) Refined Mithril: READY")))
 	}

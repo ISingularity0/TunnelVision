@@ -6,6 +6,7 @@ object PickaxeAbilityParser {
 	private const val TAB_HEADER = "Pickaxe Ability:"
 	private val tabLine = Regex("""^(.+): (?:(?:(\d+)m )?(\d+)s|Available)$""")
 	private val usedMessage = Regex("""^You used your (.+) Pickaxe Ability!$""")
+	private val availableMessage = Regex("""^(.+) is now available!$""")
 	private val loreCooldown = Regex("""^Cooldown: (\d+)s$""")
 	private val miningToolTypes = listOf(" DRILL", " PICKAXE", " GAUNTLET")
 
@@ -19,6 +20,8 @@ object PickaxeAbilityParser {
 	}
 
 	fun parseUsedMessage(message: String): String? = usedMessage.matchEntire(message)?.groupValues?.get(1)
+
+	fun parseAvailableMessage(message: String): String? = availableMessage.matchEntire(message)?.groupValues?.get(1)
 
 	fun parseLoreCooldown(lore: List<String>): Int? =
 		lore.asReversed().firstNotNullOfOrNull { loreCooldown.matchEntire(it)?.groupValues?.get(1)?.toInt() }

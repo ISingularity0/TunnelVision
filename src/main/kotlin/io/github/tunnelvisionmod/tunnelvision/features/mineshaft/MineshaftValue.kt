@@ -1,5 +1,6 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
+import io.github.tunnelvisionmod.tunnelvision.config.LootMode
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftType
 
 enum class GemstoneShaft(
@@ -45,8 +46,10 @@ data class MineshaftVerdict(val gemstone: GemstoneShaft, val price: Double, val 
 object MineshaftValue {
 	private const val LAPIS = "Lapis"
 
-	fun countedCorpses(corpses: Map<String, Int>, lapisOnly: Boolean): Int =
-		if (lapisOnly) corpses[LAPIS] ?: 0 else corpses.values.sum()
+	fun countedCorpses(corpses: Map<String, Int>, mode: LootMode): Int =
+		if (mode == LootMode.LAPIS_ONLY) corpses[LAPIS] ?: 0 else corpses.values.sum()
+
+	fun usesFullThresholds(mode: LootMode, crystalsFull: Boolean): Boolean = mode == LootMode.NORMAL || crystalsFull
 
 	fun evaluate(type: MineshaftType, corpses: Int, crystalsFull: Boolean, price: Double): MineshaftVerdict? {
 		val gemstone = GemstoneShaft.of(type) ?: return null

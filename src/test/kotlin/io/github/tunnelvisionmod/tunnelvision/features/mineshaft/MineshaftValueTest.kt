@@ -1,5 +1,6 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
+import io.github.tunnelvisionmod.tunnelvision.config.LootMode
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -71,14 +72,29 @@ class MineshaftValueTest {
 	}
 
 	@Test
-	fun `counts all corpses by default`() {
-		assertEquals(4, MineshaftValue.countedCorpses(mapOf("Lapis" to 2, "Umber" to 1, "Tungsten" to 1), lapisOnly = false))
+	fun `normal and greedy count all corpses`() {
+		assertEquals(4, MineshaftValue.countedCorpses(mapOf("Lapis" to 2, "Umber" to 1, "Tungsten" to 1), LootMode.NORMAL))
+		assertEquals(4, MineshaftValue.countedCorpses(mapOf("Lapis" to 2, "Umber" to 1, "Tungsten" to 1), LootMode.GREEDY))
 	}
 
 	@Test
 	fun `lapis only counts lapis corpses`() {
-		assertEquals(2, MineshaftValue.countedCorpses(mapOf("Lapis" to 2, "Umber" to 1, "Tungsten" to 1), lapisOnly = true))
-		assertEquals(0, MineshaftValue.countedCorpses(mapOf("Umber" to 2), lapisOnly = true))
+		assertEquals(2, MineshaftValue.countedCorpses(mapOf("Lapis" to 2, "Umber" to 1, "Tungsten" to 1), LootMode.LAPIS_ONLY))
+		assertEquals(0, MineshaftValue.countedCorpses(mapOf("Umber" to 2), LootMode.LAPIS_ONLY))
+	}
+
+	@Test
+	fun `normal always uses the crystals full thresholds`() {
+		assertTrue(MineshaftValue.usesFullThresholds(LootMode.NORMAL, crystalsFull = false))
+		assertTrue(MineshaftValue.usesFullThresholds(LootMode.NORMAL, crystalsFull = true))
+	}
+
+	@Test
+	fun `greedy and lapis only follow the crystals`() {
+		for (mode in listOf(LootMode.GREEDY, LootMode.LAPIS_ONLY)) {
+			assertFalse(MineshaftValue.usesFullThresholds(mode, crystalsFull = false))
+			assertTrue(MineshaftValue.usesFullThresholds(mode, crystalsFull = true))
+		}
 	}
 
 	@Test

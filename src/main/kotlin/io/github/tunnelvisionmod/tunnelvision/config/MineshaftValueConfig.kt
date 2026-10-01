@@ -20,9 +20,9 @@ class MineshaftValueConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Lapis Only", desc = "Only count Lapis corpses.")
-	@ConfigEditorBoolean
-	var lapisOnly = false
+	@ConfigOption(name = "Loot Mode", desc = "§eLapis Only§7: only Lapis corpses. §eNormal§7: all corpses in a shaft worth mining, otherwise Lapis + Vanguard. §eGreedy§7: all corpses until crystals and forge are full, then like Normal.")
+	@ConfigEditorDropdown
+	var lootMode = LootMode.LAPIS_ONLY
 
 	@Expose
 	@JvmField
@@ -34,6 +34,14 @@ class MineshaftValueConfig {
 enum class BazaarPriceType(private val label: String) {
 	SELL_OFFER("Sell Offer"),
 	INSTANT_SELL("Instant Sell");
+
+	override fun toString() = label
+}
+
+enum class LootMode(private val label: String) {
+	LAPIS_ONLY("Lapis Only"),
+	NORMAL("Normal"),
+	GREEDY("Greedy");
 
 	override fun toString() = label
 }

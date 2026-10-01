@@ -55,6 +55,12 @@ class PickaxeAbilityParserTest {
 	}
 
 	@Test
+	fun `available message`() {
+		assertEquals("Pickobulus", PickaxeAbilityParser.parseAvailableMessage("Pickobulus is now available!"))
+		assertNull(PickaxeAbilityParser.parseAvailableMessage("You used your Pickobulus Pickaxe Ability!"))
+	}
+
+	@Test
 	fun `lore cooldown`() {
 		val lore = listOf("Mining Speed: +1,000", "", "Ability: Mining Speed Boost  RIGHT CLICK", "Grants +200% Mining Speed for 15s.", "Cooldown: 120s", "", "LEGENDARY DRILL")
 		assertEquals(120, PickaxeAbilityParser.parseLoreCooldown(lore))
