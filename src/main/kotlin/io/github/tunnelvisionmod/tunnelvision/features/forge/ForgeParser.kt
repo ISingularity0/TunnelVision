@@ -47,7 +47,7 @@ object ForgeParser {
 			when {
 				occupied != null -> {
 					val (item, state) = occupied
-					slots += ForgeSlot(slot.toInt(), item, state.lowercase() in readyStates)
+					slots += ForgeSlot(slot.toInt(), item.trimStart { !it.isLetterOrDigit() }, state.lowercase() in readyStates)
 				}
 				content.equals(EMPTY_SLOT, ignoreCase = true) -> open++
 				content.equals(LOCKED_SLOT, ignoreCase = true) -> locked++

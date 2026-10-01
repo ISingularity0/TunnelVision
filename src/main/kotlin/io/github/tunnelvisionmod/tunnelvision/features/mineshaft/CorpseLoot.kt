@@ -1,5 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
+import io.github.tunnelvisionmod.tunnelvision.config.LootMode
+
 enum class LootRule(private val label: String, private val types: Set<CorpseType>) {
 	ALL("all corpses", CorpseType.entries.toSet()),
 	LAPIS("Lapis only", setOf(CorpseType.LAPIS)),
@@ -14,9 +16,10 @@ object CorpseLoot {
 	private const val TAB_HEADER = "Frozen Corpses:"
 	private val corpseLine = Regex("""^(\w+): (NOT )?LOOTED$""")
 
-	fun rule(lapisOnly: Boolean, crystalsFull: Boolean, shouldMine: Boolean?): LootRule = when {
-		lapisOnly -> LootRule.LAPIS
-		!crystalsFull || shouldMine == true -> LootRule.ALL
+	fun rule(mode: LootMode, crystalsFull: Boolean, shouldMine: Boolean?): LootRule = when {
+		mode == LootMode.LAPIS_ONLY -> LootRule.LAPIS
+		mode == LootMode.GREEDY && !crystalsFull -> LootRule.ALL
+		shouldMine == true -> LootRule.ALL
 		else -> LootRule.LAPIS_AND_VANGUARD
 	}
 

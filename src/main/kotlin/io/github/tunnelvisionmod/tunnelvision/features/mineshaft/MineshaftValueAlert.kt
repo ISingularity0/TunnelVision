@@ -38,7 +38,7 @@ object MineshaftValueAlert {
 		}
 		val verdict = currentVerdict() ?: return
 		done = true
-		Debug.log { "MineshaftValue: ${type.code}, lapis only: ${config.lapisOnly}, crystals full: ${CrystalNotifications.crystalsAndForgeFull}, $verdict" }
+		Debug.log { "MineshaftValue: ${type.code}, loot mode: ${config.lootMode}, crystals full: ${CrystalNotifications.crystalsAndForgeFull}, $verdict" }
 		announce(verdict)
 	}
 
@@ -46,13 +46,14 @@ object MineshaftValueAlert {
 		if (!SkyBlock.isInMineshaft) return null
 		val type = MineshaftDetection.type ?: return null
 		val gemstone = GemstoneShaft.of(type) ?: return null
-		val corpses = MineshaftParser.parseCorpses(TabList.lines)?.let { MineshaftValue.countedCorpses(it, config.lapisOnly) } ?: return null
+		val corpses = MineshaftParser.parseCorpses(TabList.lines)?.let { MineshaftValue.countedCorpses(it, config.lootMode) } ?: return null
 		val prices = Bazaar.price(gemstone.fineGemId) ?: return null
 		val price = when (config.priceType) {
 			BazaarPriceType.SELL_OFFER -> prices.sellOffer
 			BazaarPriceType.INSTANT_SELL -> prices.instantSell
 		}
-		return MineshaftValue.evaluate(type, corpses, CrystalNotifications.crystalsAndForgeFull, price)
+		val fullThresholds = MineshaftValue.usesFullThresholds(config.lootMode, CrystalNotifications.crystalsAndForgeFull)
+		return MineshaftValue.evaluate(type, corpses, fullThresholds, price)
 	}
 
 	private fun announce(verdict: MineshaftVerdict) {

@@ -62,6 +62,7 @@ object CrystalNotifications {
 	private var entryTicks = 0
 	private var fullMessageSent = false
 	private var lastHotmStates: Map<CrystalType, Boolean>? = null
+	private var lastForgeItems: List<Pair<Int, String>>? = null
 
 	/**
 	 * The menu has to have been read once before anything we say about crystals is meaningful.
@@ -79,6 +80,7 @@ object CrystalNotifications {
 			tracker.reset()
 			forgeFull = null
 			lastHotmStates = null
+			lastForgeItems = null
 			stateKnown = false
 			testOverride = false
 			perfectGems.reset()
@@ -180,6 +182,11 @@ object CrystalNotifications {
 	 */
 	private fun readForge() {
 		val status = ForgeParser.parseStatus(TabList.lines) ?: return
+		val items = status.slots.map { it.slot to it.item }
+		if (items != lastForgeItems) {
+			lastForgeItems = items
+			Debug.log { "Crystals: forge slots $items" }
+		}
 		for (crystal in perfectGems.newPerfectGems(status.slots)) {
 			if (tracker.consumed(crystal)) Debug.log { "Crystals: spent " + crystal.displayName + " (perfect gemstone started in the forge)" }
 		}

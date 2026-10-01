@@ -28,6 +28,15 @@ class PerfectGemWatcherTest {
 	}
 
 	@Test
+	fun `perfect gemstone with an icon or a cut off name still counts`() {
+		watcher.newPerfectGems(listOf(handle))
+		assertEquals(
+			listOf(CrystalType.OPAL, CrystalType.RUBY),
+			watcher.newPerfectGems(listOf(handle, ForgeSlot(2, " Perfect Opal Gemstone", false), ForgeSlot(3, "Perfect Ruby Gem...", false))),
+		)
+	}
+
+	@Test
 	fun `other forge items are ignored`() {
 		watcher.newPerfectGems(emptyList())
 		assertEquals(emptyList<CrystalType>(), watcher.newPerfectGems(listOf(handle, ForgeSlot(2, "Flawless Citrine Gemstone", false))))

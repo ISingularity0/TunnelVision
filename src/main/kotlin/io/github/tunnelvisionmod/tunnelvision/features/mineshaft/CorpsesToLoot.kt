@@ -28,7 +28,7 @@ object CorpsesToLoot {
 	}
 
 	private fun currentRule(): LootRule = CorpseLoot.rule(
-		lapisOnly = valueConfig.lapisOnly,
+		mode = valueConfig.lootMode,
 		crystalsFull = CrystalNotifications.crystalsAndForgeFull,
 		shouldMine = MineshaftValueAlert.currentVerdict()?.shouldMine,
 	)

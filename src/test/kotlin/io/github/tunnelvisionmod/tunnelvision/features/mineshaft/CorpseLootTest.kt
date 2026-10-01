@@ -1,5 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
+import io.github.tunnelvisionmod.tunnelvision.config.LootMode
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -7,21 +9,30 @@ import org.junit.jupiter.api.Test
 class CorpseLootTest {
 	@Test
 	fun `lapis only always means lapis`() {
-		assertEquals(LootRule.LAPIS, CorpseLoot.rule(lapisOnly = true, crystalsFull = false, shouldMine = true))
-		assertEquals(LootRule.LAPIS, CorpseLoot.rule(lapisOnly = true, crystalsFull = true, shouldMine = false))
+		assertEquals(LootRule.LAPIS, CorpseLoot.rule(LootMode.LAPIS_ONLY, crystalsFull = false, shouldMine = true))
+		assertEquals(LootRule.LAPIS, CorpseLoot.rule(LootMode.LAPIS_ONLY, crystalsFull = true, shouldMine = false))
 	}
 
 	@Test
-	fun `loot everything while crystals are not full`() {
-		assertEquals(LootRule.ALL, CorpseLoot.rule(lapisOnly = false, crystalsFull = false, shouldMine = false))
-		assertEquals(LootRule.ALL, CorpseLoot.rule(lapisOnly = false, crystalsFull = false, shouldMine = null))
+	fun `greedy loots everything while crystals are not full`() {
+		assertEquals(LootRule.ALL, CorpseLoot.rule(LootMode.GREEDY, crystalsFull = false, shouldMine = false))
+		assertEquals(LootRule.ALL, CorpseLoot.rule(LootMode.GREEDY, crystalsFull = false, shouldMine = null))
 	}
 
 	@Test
-	fun `crystals full loots everything only in a shaft worth mining`() {
-		assertEquals(LootRule.ALL, CorpseLoot.rule(lapisOnly = false, crystalsFull = true, shouldMine = true))
-		assertEquals(LootRule.LAPIS_AND_VANGUARD, CorpseLoot.rule(lapisOnly = false, crystalsFull = true, shouldMine = false))
-		assertEquals(LootRule.LAPIS_AND_VANGUARD, CorpseLoot.rule(lapisOnly = false, crystalsFull = true, shouldMine = null))
+	fun `greedy with crystals full loots everything only in a shaft worth mining`() {
+		assertEquals(LootRule.ALL, CorpseLoot.rule(LootMode.GREEDY, crystalsFull = true, shouldMine = true))
+		assertEquals(LootRule.LAPIS_AND_VANGUARD, CorpseLoot.rule(LootMode.GREEDY, crystalsFull = true, shouldMine = false))
+		assertEquals(LootRule.LAPIS_AND_VANGUARD, CorpseLoot.rule(LootMode.GREEDY, crystalsFull = true, shouldMine = null))
+	}
+
+	@Test
+	fun `normal loots everything only in a shaft worth mining, crystals or not`() {
+		for (crystalsFull in listOf(false, true)) {
+			assertEquals(LootRule.ALL, CorpseLoot.rule(LootMode.NORMAL, crystalsFull, shouldMine = true))
+			assertEquals(LootRule.LAPIS_AND_VANGUARD, CorpseLoot.rule(LootMode.NORMAL, crystalsFull, shouldMine = false))
+			assertEquals(LootRule.LAPIS_AND_VANGUARD, CorpseLoot.rule(LootMode.NORMAL, crystalsFull, shouldMine = null))
+		}
 	}
 
 	@Test

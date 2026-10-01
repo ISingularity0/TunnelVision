@@ -3,7 +3,7 @@ package io.github.tunnelvisionmod.tunnelvision.features.crystals
 import io.github.tunnelvisionmod.tunnelvision.features.forge.ForgeSlot
 
 class PerfectGemWatcher {
-	private val perfectGem = Regex("""^Perfect (\w+) Gemstone$""")
+	private val perfectGem = Regex("""\bPerfect (\w+) Gem""")
 	private var known: Map<Int, String>? = null
 
 	fun newPerfectGems(slots: List<ForgeSlot>): List<CrystalType> {
@@ -13,7 +13,7 @@ class PerfectGemWatcher {
 		if (previous == null) return emptyList()
 		return current.filter { (slot, item) -> previous[slot] != item }
 			.values
-			.mapNotNull { item -> perfectGem.matchEntire(item)?.groupValues?.get(1)?.let { CrystalType.byDisplayName(it) } }
+			.mapNotNull { item -> perfectGem.find(item)?.groupValues?.get(1)?.let { CrystalType.byDisplayName(it) } }
 	}
 
 	fun reset() {
