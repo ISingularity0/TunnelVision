@@ -13,6 +13,7 @@
 		"issues": "https://github.com/TunnelVisionMod/TunnelVision/issues"
 	},
 	"license": "MIT",
+	"icon": "assets/tunnelvision/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
