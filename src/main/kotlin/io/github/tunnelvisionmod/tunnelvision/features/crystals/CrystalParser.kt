@@ -4,12 +4,14 @@ package io.github.tunnelvisionmod.tunnelvision.features.crystals
 data class CrystalReading(val crystal: CrystalType, val carried: Boolean)
 
 /**
- * Reads which crystals you are carrying, from three sources that each fail differently:
+ * Reads which crystals you are carrying, from two sources:
  *
  * - the `Crystal Hollows Crystals` item in the Heart of the Mountain menu, whose lore lists every
- *   crystal and is the only complete source,
- * - the `Crystals:` tab widget, which is too small to show them all, and
+ *   crystal and is the only complete source, and
  * - the chat line you get when one drops, which works while no menu is open.
+ *
+ * The `Crystals:` tab widget is deliberately ignored: it only lists a few crystals and lags behind
+ * the forge, putting spent crystals back.
  *
  * The lore looks like this, with the crystals we care about in the second block:
  *
@@ -28,8 +30,6 @@ data class CrystalReading(val crystal: CrystalType, val carried: Boolean)
  * for the obvious reason.
  */
 object CrystalParser {
-	private const val TAB_HEADER = "Crystals:"
-
 	/** The Heart of the Mountain item whose lore lists every crystal. */
 	const val HOTM_ITEM = "Crystal Hollows Crystals"
 
@@ -53,7 +53,7 @@ object CrystalParser {
 	private val missingStates = listOf("not found", "not placed", "missing", "none", "undiscovered")
 
 	/**
-	 * One `Jasper X Not Found` style line, from either the menu lore or the tab widget. Null when
+	 * One `Jasper X Not Found` style line from the menu lore. Null when
 	 * the line does not start with a crystal name.
 	 */
 	fun parseCrystalLine(line: String): CrystalReading? {
@@ -77,28 +77,6 @@ object CrystalParser {
 		for (line in lore) {
 			val reading = parseCrystalLine(line) ?: continue
 			states[reading.crystal] = reading.carried
-		}
-		return states
-	}
-
-	/**
-	 * Null when the widget is not shown at all. Otherwise every crystal the widget mentions. The
-	 * widget is too small to list them all, so absence from it means nothing.
-	 */
-	fun parseTab(lines: List<String>): Map<CrystalType, Boolean>? {
-		val header = lines.indexOfFirst { it.trim() == TAB_HEADER }
-		if (header < 0) return null
-		val states = linkedMapOf<CrystalType, Boolean>()
-		for (line in lines.drop(header + 1)) {
-			val trimmed = line.trim()
-			val reading = parseCrystalLine(trimmed)
-			if (reading != null) {
-				states[reading.crystal] = reading.carried
-				continue
-			}
-			// An empty line or another widget header ends this widget; anything else is skipped so
-			// one decorative line cannot hide the rest.
-			if (trimmed.isEmpty() || trimmed.endsWith(":")) break
 		}
 		return states
 	}

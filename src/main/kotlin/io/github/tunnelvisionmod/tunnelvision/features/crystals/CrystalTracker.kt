@@ -1,11 +1,10 @@
 package io.github.tunnelvisionmod.tunnelvision.features.crystals
 
 /**
- * Which crystals you are carrying, merged from the Heart of the Mountain menu, the tab widget and
- * chat.
+ * Which crystals you are carrying, merged from the Heart of the Mountain menu, chat and the forge.
  *
- * The menu is the only complete source, but it is only readable while it is open, so the other two
- * keep the picture current in between. Crucially every source can take a crystal away as well as
+ * The menu is the only complete source, but it is only readable while it is open, so chat and the
+ * forge keep the picture current in between. Crucially every source can take a crystal away as well as
  * add one - a crystal spent in the forge is gone, and the menu will not say so until you next open
  * it.
  */

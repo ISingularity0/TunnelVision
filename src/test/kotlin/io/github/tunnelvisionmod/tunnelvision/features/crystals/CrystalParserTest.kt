@@ -76,17 +76,6 @@ class CrystalParserTest {
 	}
 
 	@Test
-	fun `tab widget uses the same shape`() {
-		val lines = listOf("Area: Dwarven Mines", "Crystals:", "Jasper \u2716 Not Found", "Ruby \u2714 Found", "Forges:", "1) EMPTY")
-		assertEquals(mapOf(CrystalType.JASPER to false, CrystalType.RUBY to true), CrystalParser.parseTab(lines))
-	}
-
-	@Test
-	fun `no tab widget`() {
-		assertNull(CrystalParser.parseTab(listOf("Area: Dwarven Mines", "Forges:")))
-	}
-
-	@Test
 	fun `the drop line is the crystal name, indented`() {
 		assertEquals(CrystalType.JASPER, CrystalParser.parseChatGained("    Jasper Crystal"))
 		assertEquals(CrystalType.RUBY, CrystalParser.parseChatGained("  Ruby Crystal"))
