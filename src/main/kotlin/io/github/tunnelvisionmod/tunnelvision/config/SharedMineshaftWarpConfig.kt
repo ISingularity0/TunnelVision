@@ -10,19 +10,19 @@ import io.github.tunnelvisionmod.tunnelvision.utils.KeyUtils
 class SharedMineshaftWarpConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Enabled", desc = "When a party member shares a mineshaft in party chat, let you warp in with one key press (sends !w to party chat).")
+	@ConfigOption(name = "Enabled", desc = "Press a key to warp into a mineshaft shared in party chat.")
 	@ConfigEditorBoolean
 	var enabled = false
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Warp Key", desc = "Key that sends !w to party chat after a mineshaft was shared.")
+	@ConfigOption(name = "Warp Key", desc = "Key to warp into the shared mineshaft.")
 	@ConfigEditorKeybind(defaultKey = KeyUtils.NONE)
 	var warpKey = KeyUtils.NONE
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Time Window", desc = "How many seconds after the shared message the key works. 0 = no time limit.")
+	@ConfigOption(name = "Time Window", desc = "Seconds the key works after a share. 0 = no limit.")
 	@ConfigEditorSlider(minValue = 0f, maxValue = 20f, minStep = 1f)
 	var windowSeconds = 10
 

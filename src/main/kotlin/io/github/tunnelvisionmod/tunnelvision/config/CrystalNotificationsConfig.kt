@@ -13,29 +13,19 @@ class CrystalNotificationsConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(
-		name = "Available Title",
-		desc = "Entering the Dwarven Mines while carrying a crystal shows \"<Crystal> available\" " +
-			"with \"go to forge\" under it. Stays quiet when the forge has no open slot.",
-	)
+	@ConfigOption(name = "Available Title", desc = "Show a title when you enter the Dwarven Mines with a crystal to forge.")
 	@ConfigEditorBoolean
 	var availableTitle = true
 
 	@Expose
 	@JvmField
-	@ConfigOption(
-		name = "Crystals Full Message",
-		desc = "Send \"Crystals full\" to chat once when you carry every crystal and the forge is full.",
-	)
+	@ConfigOption(name = "Crystals Full Message", desc = "Tell you in chat when you carry every crystal and the forge is full.")
 	@ConfigEditorBoolean
 	var fullMessage = true
 
 	@Expose
 	@JvmField
-	@ConfigOption(
-		name = "Widget",
-		desc = "Show a HUD widget listing the crystals you are carrying. Move it with /tv hud.",
-	)
+	@ConfigOption(name = "Widget", desc = "Show a HUD widget with the crystals you carry.")
 	@ConfigEditorBoolean
 	var widget = true
 

@@ -14,7 +14,7 @@ class MiningEffectsConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Potion Affinity", desc = "Your Potion Affinity accessory. It increases the duration shown on the potion when you drink it.")
+	@ConfigOption(name = "Potion Affinity", desc = "Your Potion Affinity accessory.")
 	@ConfigEditorDropdown
 	var potionAffinity = PotionAffinity.NONE
 

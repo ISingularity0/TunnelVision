@@ -7,13 +7,13 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class MineshaftTypeConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Entry Message", desc = "Announce the mineshaft type in chat when you enter a Glacite Mineshaft.")
+	@ConfigOption(name = "Entry Message", desc = "Show the mineshaft type in chat when you enter.")
 	@ConfigEditorBoolean
 	var announceEntry = false
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Entry Title", desc = "Also show the mineshaft type as a title on screen.")
+	@ConfigOption(name = "Entry Title", desc = "Show the mineshaft type as a title.")
 	@ConfigEditorBoolean
 	var showTitle = false
 }

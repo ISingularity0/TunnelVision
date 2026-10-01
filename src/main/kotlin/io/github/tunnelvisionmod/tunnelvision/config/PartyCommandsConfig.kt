@@ -7,7 +7,7 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class PartyCommandsConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Enabled", desc = "React to commands in party chat. They only work if you are the party leader.")
+	@ConfigOption(name = "Enabled", desc = "React to commands in party chat. §bRequires being party leader.")
 	@ConfigEditorBoolean
 	var enabled = false
 
@@ -19,7 +19,7 @@ class PartyCommandsConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Party Warp", desc = "Warp the party when someone (including you) types !w or !warp. At most once every 5 seconds.")
+	@ConfigOption(name = "Party Warp", desc = "Warp the party when someone types !w or !warp.")
 	@ConfigEditorBoolean
 	var warp = true
 }

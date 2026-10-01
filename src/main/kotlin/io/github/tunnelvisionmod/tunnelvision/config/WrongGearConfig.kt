@@ -8,13 +8,13 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class WrongGearConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Enabled", desc = "Warn whenever a Pristine proc drops fewer gemstones than your gear should give, so you notice you are mining with the wrong setup.")
+	@ConfigOption(name = "Enabled", desc = "Warn when a Pristine proc drops too few gemstones.")
 	@ConfigEditorBoolean
 	var enabled = false
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Low Proc", desc = "Warn when a Pristine proc gives this many gemstones or fewer. Set this just under what your correct gear normally drops.")
+	@ConfigOption(name = "Low Proc", desc = "Warn when a proc drops this many gemstones or fewer.")
 	@ConfigEditorSlider(minValue = 1f, maxValue = 25f, minStep = 1f)
 	var lowProc = 2
 

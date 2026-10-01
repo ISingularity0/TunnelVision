@@ -7,7 +7,7 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class CutLooseTrackerConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Enabled", desc = "Show a HUD widget counting your mob kills in the current Glacite Mineshaft (Cut Loose stacks up to 10).")
+	@ConfigOption(name = "Enabled", desc = "Show a HUD widget with your Cut Loose kills in this mineshaft.")
 	@ConfigEditorBoolean
 	var enabled = false
 }
