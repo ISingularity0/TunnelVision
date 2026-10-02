@@ -4,6 +4,7 @@ import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.GemstoneRoutes
 import io.github.tunnelvisionmod.tunnelvision.utils.Cooldown
 import io.github.tunnelvisionmod.tunnelvision.utils.Debug
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
@@ -33,6 +34,7 @@ object PartyCommands {
 		val hypixelCommand = command.hypixelCommand(message.author)
 		Debug.log { "PartyCommands: ${message.author} used ${message.message} -> /$hypixelCommand" }
 		mc.connection?.sendCommand(hypixelCommand)
+		if (command == PartyCommand.WARP) GemstoneRoutes.onPartyWarped()
 	}
 
 	private fun isIgnoredOwnWarp(author: String): Boolean {
