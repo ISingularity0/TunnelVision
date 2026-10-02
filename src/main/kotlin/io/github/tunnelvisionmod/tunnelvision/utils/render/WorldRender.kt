@@ -84,6 +84,23 @@ object WorldRender {
 		}
 	}
 
+	fun lines(context: LevelRenderContext, segments: List<Pair<Vec3, Vec3>>, color: Int, throughWalls: Boolean) {
+		if (segments.isEmpty()) return
+		val renderType = if (throughWalls) linesThroughWalls else RenderTypes.lines()
+		val cameraPos = camera
+		context.submitNodeCollector().submitCustomGeometry(context.poseStack(), renderType) { pose, buffer ->
+			for ((from, to) in segments) {
+				val a = from.subtract(cameraPos)
+				val b = to.subtract(cameraPos)
+				val nx = (b.x - a.x).toFloat()
+				val ny = (b.y - a.y).toFloat()
+				val nz = (b.z - a.z).toFloat()
+				buffer.lineVertex(pose, a.x.toFloat(), a.y.toFloat(), a.z.toFloat(), color, nx, ny, nz)
+				buffer.lineVertex(pose, b.x.toFloat(), b.y.toFloat(), b.z.toFloat(), color, nx, ny, nz)
+			}
+		}
+	}
+
 	fun filled(context: LevelRenderContext, box: AABB, color: Int) {
 		val shifted = box.move(camera.reverse())
 		context.submitNodeCollector().submitCustomGeometry(context.poseStack(), filledThroughWalls) { pose, buffer ->

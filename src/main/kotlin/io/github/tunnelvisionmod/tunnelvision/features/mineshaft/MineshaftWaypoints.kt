@@ -29,9 +29,7 @@ object MineshaftWaypoints {
 	private const val CLOSE_ENOUGH = 4.0
 	private const val CORPSE_AT_SPOT = 3.0
 	private const val VISIBLE_CHECKS_NEEDED = 2
-	private const val FOSSIL_SEED_RADIUS = 3
-	private const val FOSSIL_MAX_RADIUS = 10
-	private const val FOSSIL_MAX_BLOCKS = 500
+	private const val FOSSIL_RADIUS = 12
 
 	private const val SPOT_COLOR = 0xFFFFFFFF.toInt()
 	private const val FOSSIL_COLOR = 0xFFB040FF.toInt()
@@ -43,13 +41,16 @@ object MineshaftWaypoints {
 	private val spots by lazy { MineshaftSpots.load() }
 	private val state = WaypointState()
 
-	val hasPendingFossil: Boolean get() = config.enabled && started && state.fossil != null
+	val hasPendingFossil: Boolean get() = config.enabled && started && state.fossil != null && !fossilStarted
 	private val visibleChecks = mutableMapOf<Pos, Int>()
 	private val isQuartz = mutableMapOf<Block, Boolean>()
 
 	private var started = false
+	private var todosDone = false
 	private var ticks = 0
 	private var fossilBlocks: Set<BlockPos> = emptySet()
+	private var fossilEdges: List<Pair<Vec3, Vec3>> = emptyList()
+	private var fossilStarted = false
 
 	fun init() {
 		EventBus.on<ClientTickEvent> { onTick() }
@@ -62,9 +63,12 @@ object MineshaftWaypoints {
 		if (!config.enabled || !SkyBlock.isInMineshaft) return
 		val level = mc.level ?: return
 		if (!started) start() else if (++ticks % CHECK_EVERY_TICKS == 0) {
-			checkSpots(level)
-			checkCorpses(level)
-			checkAllCorpsesFound()
+			updateTodosDone()
+			if (!todosDone) {
+				checkSpots(level)
+				checkCorpses(level)
+				checkAllCorpsesFound()
+			}
 			checkFossil(level)
 		}
 	}
@@ -77,6 +81,12 @@ object MineshaftWaypoints {
 			if (config.fossil) spots.fossil(type) else null,
 		)
 		Debug.log { "MineshaftWaypoints: ${type.code} with ${state.possibleSpots.size} spots, fossil ${state.fossil}" }
+	}
+
+	private fun updateTodosDone() {
+		val done = CorpsesToLoot.todosDone
+		if (done != todosDone) Debug.log { "MineshaftWaypoints: to-dos ${if (done) "done, hiding corpse waypoints" else "open again"}" }
+		todosDone = done
 	}
 
 	private fun checkSpots(level: ClientLevel) {
@@ -113,35 +123,33 @@ object MineshaftWaypoints {
 	private fun checkFossil(level: ClientLevel) {
 		val fossil = state.fossil ?: return
 		val centre = fossil.toBlockPos()
-		if (!level.isLoaded(centre)) return
+		if (listOf(-FOSSIL_RADIUS, FOSSIL_RADIUS).any { dx -> listOf(-FOSSIL_RADIUS, FOSSIL_RADIUS).any { dz -> !level.isLoaded(centre.offset(dx, 0, dz)) } }) return
 		if (fossilBlocks.isEmpty()) {
 			fossilBlocks = findFossil(level, centre)
+			fossilEdges = fossilBlocks.outline()
 			if (fossilBlocks.isNotEmpty()) Debug.log { "MineshaftWaypoints: fossil has ${fossilBlocks.size} blocks" }
 			return
 		}
-		if (fossilBlocks.any { !level.getBlockState(it).block.isQuartz() }) {
+		val left = fossilBlocks.filter { level.getBlockState(it).block.isQuartz() }.toSet()
+		if (left.size == fossilBlocks.size) return
+		if (!fossilStarted) Debug.log { "MineshaftWaypoints: started mining the fossil" }
+		fossilStarted = true
+		fossilBlocks = left
+		fossilEdges = left.outline()
+		if (left.isEmpty()) {
 			Debug.log { "MineshaftWaypoints: fossil mined" }
 			state.onFossilBlockMined(fossil)
-			fossilBlocks = emptySet()
+			fossilStarted = false
 		}
 	}
 
-	private fun findFossil(level: ClientLevel, centre: BlockPos): Set<BlockPos> {
-		val found = mutableSetOf<BlockPos>()
-		val queue = ArrayDeque(BlockPos.betweenClosed(centre.offset(-FOSSIL_SEED_RADIUS, -FOSSIL_SEED_RADIUS, -FOSSIL_SEED_RADIUS), centre.offset(FOSSIL_SEED_RADIUS, FOSSIL_SEED_RADIUS, FOSSIL_SEED_RADIUS))
+	private fun Set<BlockPos>.outline() = VeinOutline.edges(map { it.toPos() }.toSet()).map { (a, b) -> a.toVec3() to b.toVec3() }
+
+	private fun findFossil(level: ClientLevel, centre: BlockPos): Set<BlockPos> =
+		BlockPos.betweenClosed(centre.offset(-FOSSIL_RADIUS, -FOSSIL_RADIUS, -FOSSIL_RADIUS), centre.offset(FOSSIL_RADIUS, FOSSIL_RADIUS, FOSSIL_RADIUS))
 			.map { it.immutable() }
-			.filter { level.getBlockState(it).block.isQuartz() })
-		while (queue.isNotEmpty() && found.size < FOSSIL_MAX_BLOCKS) {
-			val pos = queue.removeFirst()
-			if (!found.add(pos)) continue
-			for (next in listOf(pos.above(), pos.below(), pos.north(), pos.south(), pos.east(), pos.west())) {
-				if (next !in found && next.closerThan(centre, FOSSIL_MAX_RADIUS.toDouble()) && level.getBlockState(next).block.isQuartz()) {
-					queue.addLast(next)
-				}
-			}
-		}
-		return found
-	}
+			.filter { it.closerThan(centre, FOSSIL_RADIUS.toDouble()) && level.getBlockState(it).block.isQuartz() }
+			.toSet()
 
 	private fun onChat(event: ChatReceivedEvent) {
 		if (!config.enabled || !SkyBlock.isInMineshaft) return
@@ -154,6 +162,17 @@ object MineshaftWaypoints {
 	private fun onRender(context: LevelRenderContext) {
 		if (!config.enabled || !SkyBlock.isInMineshaft || !started) return
 		val eye = mc.player?.eyePosition ?: return
+		if (!todosDone) renderCorpses(context, eye)
+		state.fossil?.let { fossil ->
+			WorldRender.lines(context, fossilEdges, FOSSIL_COLOR, throughWalls = false)
+			if (fossilStarted) return@let
+			val box = AABB(fossil.toBlockPos())
+			WorldRender.outline(context, box, FOSSIL_COLOR, throughWalls = true)
+			label(context, box, "Fossil", FOSSIL_COLOR, eye)
+		}
+	}
+
+	private fun renderCorpses(context: LevelRenderContext, eye: Vec3) {
 		for (spot in state.possibleSpots) {
 			val box = spot.box()
 			WorldRender.outline(context, box, SPOT_COLOR, throughWalls = true)
@@ -165,11 +184,6 @@ object MineshaftWaypoints {
 			WorldRender.filled(context, box, color.withAlpha(FILL_ALPHA))
 			WorldRender.outline(context, box, color, throughWalls = true)
 			label(context, box, "${corpse.type.displayName()} Corpse", color, eye)
-		}
-		state.fossil?.let { fossil ->
-			val box = AABB(fossil.toBlockPos())
-			WorldRender.outline(context, box, FOSSIL_COLOR, throughWalls = true)
-			label(context, box, "Fossil", FOSSIL_COLOR, eye)
 		}
 	}
 
@@ -184,10 +198,13 @@ object MineshaftWaypoints {
 
 	private fun reset() {
 		started = false
+		todosDone = false
 		ticks = 0
 		state.reset()
 		visibleChecks.clear()
 		fossilBlocks = emptySet()
+		fossilEdges = emptyList()
+		fossilStarted = false
 	}
 
 	private fun Block.isQuartz(): Boolean = isQuartz.getOrPut(this) {
@@ -197,6 +214,7 @@ object MineshaftWaypoints {
 
 	private fun Pos.toBlockPos() = BlockPos(x, y, z)
 	private fun BlockPos.toPos() = Pos(x, y, z)
+	private fun Pos.toVec3() = Vec3(x.toDouble(), y.toDouble(), z.toDouble())
 	private fun Pos.centre() = Vec3(x + 0.5, y + 1.0, z + 0.5)
 	private fun Pos.box() = AABB(x.toDouble(), y.toDouble(), z.toDouble(), x + 1.0, y + 2.0, z + 1.0)
 	private fun Pos.samples() = listOf(centre(), Vec3(x + 0.5, y + 0.2, z + 0.5), Vec3(x + 0.5, y + 1.8, z + 0.5))

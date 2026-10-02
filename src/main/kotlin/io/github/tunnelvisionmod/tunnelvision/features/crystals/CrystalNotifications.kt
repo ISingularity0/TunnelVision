@@ -66,6 +66,9 @@ object CrystalNotifications {
 	/** The crystals you are carrying, for other features. */
 	val carriedCrystals: Set<CrystalType> get() = tracker.carried
 
+	/** False until /hotm has been read, so [carriedCrystals] being empty may just mean unknown. */
+	val crystalsKnown: Boolean get() = stateKnown
+
 	private var entryPending = false
 	private var entryTicks = 0
 	private var fullMessageSent = false

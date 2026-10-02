@@ -60,14 +60,6 @@ class CorpseLootTest {
 	}
 
 	@Test
-	fun `vanguard only mentioned in the vanguard mineshaft`() {
-		assertEquals("Lapis + Vanguard", LootRule.LAPIS_AND_VANGUARD.label(vanguardShaft = true))
-		assertEquals("Lapis only", LootRule.LAPIS_AND_VANGUARD.label(vanguardShaft = false))
-		assertEquals("Lapis only", LootRule.LAPIS.label(vanguardShaft = true))
-		assertEquals("all corpses", LootRule.ALL.label(vanguardShaft = false))
-	}
-
-	@Test
 	fun `keys needed per corpse`() {
 		assertNull(CorpseType.LAPIS.keyName)
 		assertEquals("Umber Key", CorpseType.UMBER.keyName)

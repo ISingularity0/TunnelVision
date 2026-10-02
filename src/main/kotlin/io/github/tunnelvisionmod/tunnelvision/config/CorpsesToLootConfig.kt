@@ -7,7 +7,7 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption
 class CorpsesToLootConfig {
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Enabled", desc = "Show a HUD widget with the corpses worth looting and the fossil. §bRequires Mineshaft Waypoints → Fossil for the fossil. §7Uses §eLoot Mode §7and §ePrice §7from Mineshaft Value.")
+	@ConfigOption(name = "Enabled", desc = "Show a Mineshaft To-Dos widget: corpses worth looting, the fossil and the crystal of a crystal shaft. Corpses without a key don't count. §bRequires Mineshaft Waypoints → Fossil for the fossil and /hotm opened once for the crystal. §7Uses §eLoot Mode §7and §ePrice §7from Mineshaft Value.")
 	@ConfigEditorBoolean
 	var enabled = false
 }
