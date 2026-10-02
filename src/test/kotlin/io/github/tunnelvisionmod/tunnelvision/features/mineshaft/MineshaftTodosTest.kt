@@ -15,6 +15,7 @@ class MineshaftTodosTest {
 			setOf("Umber Key"),
 			fossilPending = true,
 			crystalToGrab = CrystalType.RUBY,
+			warpedIn = false,
 		)
 		assertEquals(
 			listOf(
@@ -29,20 +30,38 @@ class MineshaftTodosTest {
 
 	@Test
 	fun `done when nothing is left`() {
-		assertTrue(MineshaftTodos.isDone(MineshaftTodos.list(emptyMap(), emptySet(), fossilPending = false, crystalToGrab = null)))
+		assertTrue(MineshaftTodos.isDone(MineshaftTodos.list(emptyMap(), emptySet(), fossilPending = false, crystalToGrab = null, warpedIn = false)))
 	}
 
 	@Test
 	fun `corpses without their key do not hold it up`() {
-		val todos = MineshaftTodos.list(mapOf(CorpseType.TUNGSTEN to 1, CorpseType.VANGUARD to 1), emptySet(), fossilPending = false, crystalToGrab = null)
+		val todos = MineshaftTodos.list(mapOf(CorpseType.TUNGSTEN to 1, CorpseType.VANGUARD to 1), emptySet(), fossilPending = false, crystalToGrab = null, warpedIn = false)
 		assertTrue(MineshaftTodos.isDone(todos))
 	}
 
 	@Test
 	fun `a lootable corpse, the fossil or the crystal keeps it open`() {
-		assertFalse(MineshaftTodos.isDone(MineshaftTodos.list(mapOf(CorpseType.LAPIS to 1), emptySet(), fossilPending = false, crystalToGrab = null)))
-		assertFalse(MineshaftTodos.isDone(MineshaftTodos.list(emptyMap(), emptySet(), fossilPending = true, crystalToGrab = null)))
-		assertFalse(MineshaftTodos.isDone(MineshaftTodos.list(emptyMap(), emptySet(), fossilPending = false, crystalToGrab = CrystalType.OPAL)))
+		assertFalse(MineshaftTodos.isDone(MineshaftTodos.list(mapOf(CorpseType.LAPIS to 1), emptySet(), fossilPending = false, crystalToGrab = null, warpedIn = false)))
+		assertFalse(MineshaftTodos.isDone(MineshaftTodos.list(emptyMap(), emptySet(), fossilPending = true, crystalToGrab = null, warpedIn = false)))
+		assertFalse(MineshaftTodos.isDone(MineshaftTodos.list(emptyMap(), emptySet(), fossilPending = false, crystalToGrab = CrystalType.OPAL, warpedIn = false)))
+	}
+
+	@Test
+	fun `a warped-in player is not asked for the fossil or the crystal`() {
+		val todos = MineshaftTodos.list(
+			mapOf(CorpseType.LAPIS to 1),
+			emptySet(),
+			fossilPending = true,
+			crystalToGrab = CrystalType.RUBY,
+			warpedIn = true,
+		)
+		assertEquals(listOf(Todo.Corpse(CorpseType.LAPIS, 1, hasKey = true)), todos)
+	}
+
+	@Test
+	fun `a warped-in player is done once the corpses are looted`() {
+		val todos = MineshaftTodos.list(emptyMap(), emptySet(), fossilPending = true, crystalToGrab = CrystalType.RUBY, warpedIn = true)
+		assertTrue(MineshaftTodos.isDone(todos))
 	}
 
 	@Test

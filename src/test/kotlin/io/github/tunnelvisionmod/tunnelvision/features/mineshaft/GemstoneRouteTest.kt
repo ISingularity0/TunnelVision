@@ -38,18 +38,22 @@ class GemstoneRouteTest {
 	}
 
 	@Test
-	fun `second half gets the paths walked backwards`() {
+	fun `centre of a waypoint without vein blocks is its position`() {
+		val waypoint = RouteWaypoint(Pos(-166, 5, -195))
+		assertEquals(Pos(-166, 5, -195), waypoint.centre)
+	}
+
+	@Test
+	fun `parses waypoints without vein blocks`() {
 		val route = GemstoneRoute.parse("""
-			{"layout":"JASP_1","split":1,"waypoints":[
-				{"x":1,"y":0,"z":0,"blocks":[[1,0,0]]},
-				{"x":2,"y":0,"z":0,"blocks":[[2,0,0]],"path":[[1,0,0],[2,0,0]]},
-				{"x":3,"y":0,"z":0,"blocks":[[3,0,0]],"path":[[2,0,0],[2,5,0],[3,0,0]]}
+			{"layout":"JADE_1","split":null,"waypoints":[
+				{"x":-166,"y":5,"z":-195,"blocks":[]},
+				{"x":-176,"y":3,"z":-195}
 			]}
 		""".trimIndent())
-		val second = route.part(GemstoneRoute.Part.SECOND)
-		assertEquals(listOf(3, 2), second.xs())
-		assertEquals(emptyList<Pos>(), second[0].path)
-		assertEquals(listOf(Pos(3, 0, 0), Pos(2, 5, 0), Pos(2, 0, 0)), second[1].path)
+		assertEquals(listOf(-166, -176), route.waypoints.xs())
+		assertEquals(listOf(emptyList<Pos>(), emptyList<Pos>()), route.waypoints.map { it.blocks })
+		assertEquals(Pos(-176, 3, -195), route.waypoints[1].centre)
 	}
 
 	@Test

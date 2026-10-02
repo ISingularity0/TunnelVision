@@ -6,7 +6,9 @@ import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.DisconnectEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
 import io.github.tunnelvisionmod.tunnelvision.events.LocationChangedEvent
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftRole
 import io.github.tunnelvisionmod.tunnelvision.utils.Debug
+import io.github.tunnelvisionmod.tunnelvision.utils.LocationTracker
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
 import io.github.tunnelvisionmod.tunnelvision.utils.TabList
 
@@ -26,25 +28,27 @@ object MineshaftPartyShare {
 	private var sent = false
 	private var lastCorpses: Map<String, Int>? = null
 	private var stableTicks = 0
-	private var lastIsland: String? = null
+	private val location = LocationTracker()
 
 	fun init() {
 		EventBus.on<ClientTickEvent> { onTick() }
 		EventBus.on<LocationChangedEvent> { onLocationChanged(it) }
 		EventBus.on<DisconnectEvent> {
-			lastIsland = null
+			location.forget()
 			reset()
 		}
 	}
 
 	private fun onLocationChanged(event: LocationChangedEvent) {
-		if (event.island == lastIsland) return
-		lastIsland = event.island
+		if (!location.isNewLocation(event)) return
 		reset()
 	}
 
 	private fun onTick() {
 		if (!config.enabled || !SkyBlock.isInMineshaft) return
+		// Announcing a mineshaft you were warped into would hand party lead back to you and prompt
+		// the host to warp into the shaft they are already standing in.
+		if (MineshaftRole.isWarpedIn) return
 
 		val corpses = MineshaftParser.parseCorpses(TabList.lines)
 		if (corpses != lastCorpses) stableTicks = 0 else stableTicks++

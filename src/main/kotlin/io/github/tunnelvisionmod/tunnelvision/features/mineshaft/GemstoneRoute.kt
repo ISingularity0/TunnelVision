@@ -4,8 +4,10 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
-data class RouteWaypoint(val pos: Pos, val blocks: List<Pos>, val path: List<Pos> = emptyList()) {
+data class RouteWaypoint(val pos: Pos, val blocks: List<Pos> = emptyList()) {
+	/** The vein block closest to the middle, or [pos] for a waypoint without vein blocks. */
 	val centre: Pos by lazy {
+		if (blocks.isEmpty()) return@lazy pos
 		val x = blocks.sumOf { it.x }.toDouble() / blocks.size
 		val y = blocks.sumOf { it.y }.toDouble() / blocks.size
 		val z = blocks.sumOf { it.z }.toDouble() / blocks.size
@@ -19,9 +21,7 @@ data class GemstoneRoute(val layout: String, val split: Int?, val waypoints: Lis
 	fun part(part: Part): List<RouteWaypoint> = when {
 		split == null || part == Part.ALL -> waypoints
 		part == Part.FIRST -> waypoints.take(split)
-		else -> waypoints.drop(split).let { tail ->
-			tail.indices.reversed().map { i -> tail[i].copy(path = tail.getOrNull(i + 1)?.path?.reversed() ?: emptyList()) }
-		}
+		else -> waypoints.drop(split).reversed()
 	}
 
 	companion object {
@@ -36,8 +36,7 @@ data class GemstoneRoute(val layout: String, val split: Int?, val waypoints: Lis
 
 		private fun JsonObject.toWaypoint() = RouteWaypoint(
 			Pos(get("x").asInt, get("y").asInt, get("z").asInt),
-			getAsJsonArray("blocks").map { it.asJsonArray.toPos() },
-			getAsJsonArray("path")?.map { it.asJsonArray.toPos() } ?: emptyList(),
+			getAsJsonArray("blocks")?.map { it.asJsonArray.toPos() } ?: emptyList(),
 		)
 
 		private fun JsonArray.toPos() = Pos(this[0].asInt, this[1].asInt, this[2].asInt)

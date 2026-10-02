@@ -10,6 +10,7 @@ import io.github.tunnelvisionmod.tunnelvision.events.MineshaftEnteredEvent
 import io.github.tunnelvisionmod.tunnelvision.events.post
 import io.github.tunnelvisionmod.tunnelvision.utils.ChatUtils
 import io.github.tunnelvisionmod.tunnelvision.utils.Debug
+import io.github.tunnelvisionmod.tunnelvision.utils.LocationTracker
 import io.github.tunnelvisionmod.tunnelvision.utils.Sidebar
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
 import io.github.tunnelvisionmod.tunnelvision.utils.TabList
@@ -18,7 +19,8 @@ import net.minecraft.network.chat.Component
 /**
  * Tracks which Glacite Mineshaft you are in and what it still holds.
  *
- * The type comes off the scoreboard and is announced as soon as it is known. The corpse count
+ * The type comes off the scoreboard and is announced as soon as it is known, and is re-read for as
+ * long as you are in the mineshaft so a warp that lands before the new scoreboard still ends up right. The corpse count
  * comes from a tab list widget that Hypixel fills in seconds later, so the entry message
  * deliberately does not wait for it - [corpseCount] is kept live for features that want it.
  */
@@ -35,22 +37,20 @@ object MineshaftDetection {
 	var corpseCount: Int? = null
 		private set
 
-	private var announced = false
-	private var lastIsland: String? = null
+	private val location = LocationTracker()
 
 	fun init() {
 		EventBus.on<ClientTickEvent> { onTick() }
 		EventBus.on<LocationChangedEvent> { onLocationChanged(it) }
 		EventBus.on<DisconnectEvent> {
-			lastIsland = null
+			location.forget()
 			reset()
 		}
 	}
 
-	// Only an actual island change starts a new mineshaft; Hypixel may repeat the location packet.
+	// Only an actual move starts a new mineshaft; Hypixel may repeat the location packet.
 	private fun onLocationChanged(event: LocationChangedEvent) {
-		if (event.island == lastIsland) return
-		lastIsland = event.island
+		if (!location.isNewLocation(event)) return
 		reset()
 	}
 
@@ -61,10 +61,12 @@ object MineshaftDetection {
 		if (count != corpseCount) Debug.log { "Mineshaft: corpses -> ${count ?: "widget absent"}" }
 		corpseCount = count
 
-		if (announced) return
+		// Keep following the sidebar instead of latching the first read: right after a party warp it
+		// can still name the mineshaft we just left, and the announcement is keyed on the type changing.
 		val detected = MineshaftParser.parseType(Sidebar.lines) ?: return
+		if (detected == type) return
+		type?.let { Debug.log { "Mineshaft: type corrected ${it.code} -> ${detected.code}" } }
 		type = detected
-		announced = true
 		announce(detected)
 		MineshaftEnteredEvent(detected).post()
 	}
@@ -82,6 +84,5 @@ object MineshaftDetection {
 	private fun reset() {
 		type = null
 		corpseCount = null
-		announced = false
 	}
 }
