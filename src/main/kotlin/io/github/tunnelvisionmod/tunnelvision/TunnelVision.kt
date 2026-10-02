@@ -10,6 +10,7 @@ import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.BlueCheeseCorps
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.CorpsesToLoot
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.CutLooseTracker
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.LanternReminder
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftRole
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftValueAlert
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftWaypoints
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.GemstoneRoutes
@@ -46,6 +47,7 @@ object TunnelVision : ClientModInitializer {
 		Sidebar.register()
 		PickaxeAbility.init()
 		MineshaftDetection.init()
+		MineshaftRole.init()
 		ForgeNotification.init()
 		CrystalNotifications.init()
 		MiningEffects.init()

@@ -19,6 +19,10 @@ object SkyBlock {
 	var island: String? = null
 		private set
 
+	/** The server instance you are on, e.g. `mini123A`; every mineshaft is its own instance. */
+	var server: String? = null
+		private set
+
 	val isInMineshaft: Boolean get() = isOnSkyBlock && island == MINESHAFT_ISLAND
 	val isInDwarvenMines: Boolean get() = isOnSkyBlock && island == DWARVEN_MINES_ISLAND
 	val isOnMiningIsland: Boolean get() = isOnSkyBlock && island in MINING_ISLANDS
@@ -29,16 +33,17 @@ object SkyBlock {
 		api.createHandler(ClientboundLocationPacket::class.java) { packet ->
 			mc.execute {
 				val onSkyBlock = packet.serverType.orElse(null) == GameType.SKYBLOCK
-				update(onSkyBlock, if (onSkyBlock) packet.mode.orElse(null) else null)
+				update(onSkyBlock, if (onSkyBlock) packet.mode.orElse(null) else null, packet.serverName)
 			}
 		}
-		EventBus.on<DisconnectEvent> { update(false, null) }
+		EventBus.on<DisconnectEvent> { update(false, null, null) }
 	}
 
-	private fun update(onSkyBlock: Boolean, newIsland: String?) {
+	private fun update(onSkyBlock: Boolean, newIsland: String?, newServer: String?) {
 		isOnSkyBlock = onSkyBlock
 		island = newIsland
-		Debug.log { "Location: onSkyBlock=$onSkyBlock island=$newIsland" }
-		LocationChangedEvent(onSkyBlock, newIsland).post()
+		server = newServer
+		Debug.log { "Location: onSkyBlock=$onSkyBlock island=$newIsland server=$newServer" }
+		LocationChangedEvent(onSkyBlock, newIsland, newServer).post()
 	}
 }

@@ -76,9 +76,11 @@ object MineshaftWaypoints {
 	private fun start() {
 		val type = MineshaftDetection.type ?: return
 		started = true
+		// The fossil goes to whoever opened the mineshaft, so a warped-in player gets no fossil waypoint.
+		val wantsFossil = config.fossil && !MineshaftRole.isWarpedIn
 		state.start(
 			if (config.corpseSpots) spots.corpseSpots(type) else emptyList(),
-			if (config.fossil) spots.fossil(type) else null,
+			if (wantsFossil) spots.fossil(type) else null,
 		)
 		Debug.log { "MineshaftWaypoints: ${type.code} with ${state.possibleSpots.size} spots, fossil ${state.fossil}" }
 	}

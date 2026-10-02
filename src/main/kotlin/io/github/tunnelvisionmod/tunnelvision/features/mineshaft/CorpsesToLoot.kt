@@ -38,6 +38,7 @@ object CorpsesToLoot {
 				carriedItemNames(),
 				MineshaftWaypoints.hasPendingFossil,
 				MineshaftTodos.crystalToGrab(crystalShaft(), CrystalNotifications.crystalsKnown, CrystalNotifications.carriedCrystals),
+				warpedIn = MineshaftRole.isWarpedIn,
 			)
 			return TodoState(todos, corpsesKnown = unlooted != null)
 		}
