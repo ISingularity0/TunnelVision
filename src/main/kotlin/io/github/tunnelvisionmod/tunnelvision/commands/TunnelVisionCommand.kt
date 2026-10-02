@@ -1,13 +1,21 @@
 package io.github.tunnelvisionmod.tunnelvision.commands
 
+import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.context.CommandContext
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalNotifications
 import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalType
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.GemstoneRoute
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.RouteLibrary
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.RouteRunner
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.utils.ChatUtils
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
+import net.minecraft.commands.SharedSuggestionProvider
 import net.minecraft.network.chat.Component
 
 object TunnelVisionCommand {
@@ -25,6 +33,7 @@ object TunnelVisionCommand {
 							1
 						})
 						.then(crystalCommand())
+						.then(routeCommand())
 				)
 			}
 		}
@@ -72,6 +81,44 @@ object TunnelVisionCommand {
 				})
 			}
 		}
+
+	/**
+	 * Previews a gemstone route in any world, so routes can be walked in downloaded mineshaft saves.
+	 * In debug mode `config/tunnelvision/routes/<layout>.json` overrides the bundled route.
+	 * `first`/`second` show one half of a split route, `skip`/`back` move the target and `off` hides it.
+	 */
+	private fun routeCommand() = literal("route")
+		.requires { ConfigManager.config.dev.debugMode }
+		.then(literal("off").executes {
+			RouteRunner.stop()
+			1
+		})
+		.then(literal("skip").executes {
+			RouteRunner.step(1)
+			1
+		})
+		.then(literal("back").executes {
+			RouteRunner.step(-1)
+			1
+		})
+		.then(argument("layout", StringArgumentType.word())
+			.suggests { _, builder -> SharedSuggestionProvider.suggest(RouteLibrary.names, builder) }
+			.executes { startRoute(it, GemstoneRoute.Part.ALL) }
+			.then(literal("first").executes { startRoute(it, GemstoneRoute.Part.FIRST) })
+			.then(literal("second").executes { startRoute(it, GemstoneRoute.Part.SECOND) }))
+
+	private fun startRoute(context: CommandContext<FabricClientCommandSource>, part: GemstoneRoute.Part): Int {
+		val name = StringArgumentType.getString(context, "layout")
+		val route = RouteLibrary.load(name)
+		if (route == null) {
+			ChatUtils.send(Component.literal("No route called $name").withStyle(ChatFormatting.RED))
+			return 1
+		}
+		val waypoints = route.part(part)
+		RouteRunner.start(waypoints) { ConfigManager.config.dev.debugMode }
+		ChatUtils.send(Component.literal("$name (${part.name.lowercase()}): ${waypoints.size} waypoints, ${waypoints.sumOf { it.blocks.size }} gems").withStyle(ChatFormatting.GREEN))
+		return 1
+	}
 
 	private fun showCarried() {
 		val carried = CrystalNotifications.carriedCrystals

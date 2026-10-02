@@ -12,6 +12,8 @@ import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.CutLooseTracker
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.LanternReminder
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftValueAlert
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.MineshaftWaypoints
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.GemstoneRoutes
+import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.RouteRunner
 import io.github.tunnelvisionmod.tunnelvision.features.mineshaft.SharedMineshaftWarp
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftPartyShare
@@ -59,6 +61,8 @@ object TunnelVision : ClientModInitializer {
 		LanternReminder.init()
 		MineshaftValueAlert.init()
 		CorpsesToLoot.init()
+		RouteRunner.init()
+		GemstoneRoutes.init()
 		TunnelVisionCommand.register()
 		logger.info("TunnelVision initialized")
 	}

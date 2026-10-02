@@ -45,6 +45,7 @@ object SharedMineshaftWarp {
 		Debug.log { "SharedMineshaftWarp: sending !w" }
 		PartyCommands.ignoreOwnWarp()
 		mc.connection?.sendCommand("pc !w")
+		GemstoneRoutes.onWarpRequested()
 	}
 
 	private fun notify(author: String, shared: SharedMineshaft) {

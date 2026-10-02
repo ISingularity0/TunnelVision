@@ -58,4 +58,10 @@ class MineshaftConfig {
 	@ConfigOption(name = "Mineshaft To-Do", desc = "Widget with the corpses worth looting and the fossil.")
 	@Accordion
 	var corpsesToLoot = CorpsesToLootConfig()
+
+	@Expose
+	@JvmField
+	@ConfigOption(name = "Gemstone Routes", desc = "Route through the best gemstone veins of the mineshaft.")
+	@Accordion
+	var gemstoneRoutes = GemstoneRoutesConfig()
 }
