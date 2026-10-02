@@ -13,13 +13,13 @@ class MineshaftWaypointsConfig {
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Corpse Spots", desc = "Mark every spot a corpse can spawn. Found corpses get colored.")
+	@ConfigOption(name = "Corpse Spots", desc = "Mark every spot a corpse can spawn. Found corpses get colored. Hidden once all corpses are found or the to-dos are done.")
 	@ConfigEditorBoolean
 	var corpseSpots = true
 
 	@Expose
 	@JvmField
-	@ConfigOption(name = "Fossil", desc = "Mark the fossil until you start mining it.")
+	@ConfigOption(name = "Fossil", desc = "Mark the fossil and outline it until the last block is mined.")
 	@ConfigEditorBoolean
 	var fossil = true
 

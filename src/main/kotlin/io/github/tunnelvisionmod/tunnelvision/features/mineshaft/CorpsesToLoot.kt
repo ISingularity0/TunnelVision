@@ -5,8 +5,8 @@ import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
 import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalNotifications
+import io.github.tunnelvisionmod.tunnelvision.features.crystals.CrystalType
 import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftDetection
-import io.github.tunnelvisionmod.tunnelvision.features.mining.MineshaftType
 import io.github.tunnelvisionmod.tunnelvision.hud.HudManager
 import io.github.tunnelvisionmod.tunnelvision.hud.HudPosition
 import io.github.tunnelvisionmod.tunnelvision.hud.HudWidget
@@ -19,8 +19,30 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 
 object CorpsesToLoot {
+	private const val CRYSTAL_SUFFIX = "_C"
+
 	private val config get() = ConfigManager.config.mineshaft.corpsesToLoot
 	private val valueConfig get() = ConfigManager.config.mineshaft.mineshaftValue
+
+	/** [corpsesKnown] is false while the Frozen Corpses tab widget is missing, so "unknown" never reads as "done". */
+	class TodoState(val todos: List<Todo>, val corpsesKnown: Boolean) {
+		val done: Boolean get() = corpsesKnown && MineshaftTodos.isDone(todos)
+	}
+
+	val state: TodoState?
+		get() {
+			if (!SkyBlock.isInMineshaft) return null
+			val unlooted = CorpseLoot.parseUnlooted(TabList.lines)
+			val todos = MineshaftTodos.list(
+				unlooted?.let { CorpseLoot.toLoot(it, currentRule()) } ?: emptyMap(),
+				carriedItemNames(),
+				MineshaftWaypoints.hasPendingFossil,
+				MineshaftTodos.crystalToGrab(crystalShaft(), CrystalNotifications.crystalsKnown, CrystalNotifications.carriedCrystals),
+			)
+			return TodoState(todos, corpsesKnown = unlooted != null)
+		}
+
+	val todosDone: Boolean get() = state?.done == true
 
 	fun init() {
 		EventBus.on<ClientTickEvent> { if (config.enabled && SkyBlock.isOnMiningIsland) Bazaar.refreshIfStale() }
@@ -32,6 +54,9 @@ object CorpsesToLoot {
 		crystalsFull = CrystalNotifications.crystalsAndForgeFull,
 		shouldMine = MineshaftValueAlert.currentVerdict()?.shouldMine,
 	)
+
+	private fun crystalShaft(): CrystalType? =
+		MineshaftDetection.type?.takeIf { it.code.endsWith(CRYSTAL_SUFFIX) }?.let { CrystalType.byDisplayName(it.displayName) }
 
 	private fun carriedItemNames(): Set<String> {
 		val inventory = mc.player?.inventory ?: return emptySet()
@@ -45,41 +70,32 @@ object CorpsesToLoot {
 		CorpseType.VANGUARD -> ChatFormatting.AQUA
 	}
 
-	private fun header(rule: LootRule, vanguardShaft: Boolean): Component =
-		Component.literal("Loot: ").withStyle(ChatFormatting.GOLD).append(Component.literal(rule.label(vanguardShaft)).withStyle(ChatFormatting.WHITE))
+	private val header: Component = Component.literal("Mineshaft To-Dos").withStyle(ChatFormatting.GOLD)
 
-	private val fossilLine: Component = Component.literal("Mine the Fossil").withStyle(ChatFormatting.LIGHT_PURPLE)
-
-	private fun corpseLine(type: CorpseType, count: Int, hasKey: Boolean): Component {
-		val line = Component.literal("${type.tabName} ×$count").withStyle(type.color())
-		return if (hasKey) line else line.append(Component.literal(" · no ${type.keyName}").withStyle(ChatFormatting.RED))
+	private fun line(todo: Todo): Component = when (todo) {
+		is Todo.Corpse -> {
+			val line = Component.literal("${todo.type.tabName} ×${todo.count}").withStyle(todo.type.color())
+			if (todo.hasKey) line else line.append(Component.literal(" · no ${todo.type.keyName}").withStyle(ChatFormatting.RED))
+		}
+		Todo.Fossil -> Component.literal("Mine the Fossil").withStyle(ChatFormatting.LIGHT_PURPLE)
+		is Todo.GrabCrystal -> Component.literal("Grab ${todo.crystal.displayName} Crystal").withStyle(todo.crystal.color)
 	}
 
-	object Widget : HudWidget("corpses_to_loot", "Mineshaft To-Do", HudPosition(0.02f, 0.7f)) {
+	object Widget : HudWidget("corpses_to_loot", "Mineshaft To-Dos", HudPosition(0.02f, 0.7f)) {
 		override val isEnabled get() = config.enabled
 
 		override fun getLines(): List<Component> {
-			if (!SkyBlock.isInMineshaft) return emptyList()
-			val lines = mutableListOf<Component>()
-			CorpseLoot.parseUnlooted(TabList.lines)?.let { unlooted ->
-				val rule = currentRule()
-				val toLoot = CorpseLoot.toLoot(unlooted, rule)
-				if (toLoot.isEmpty()) return@let
-				val items = carriedItemNames()
-				lines += header(rule, MineshaftDetection.type == MineshaftType.VANGUARD)
-				lines += toLoot.entries.sortedBy { it.key.ordinal }.map { (type, count) ->
-					corpseLine(type, count, hasKey = type.keyName == null || type.keyName in items)
-				}
-			}
-			if (MineshaftWaypoints.hasPendingFossil) lines += fossilLine
-			return lines
+			val state = state ?: return emptyList()
+			if (state.done || state.todos.isEmpty()) return emptyList()
+			return listOf(header) + state.todos.map { line(it) }
 		}
 
 		override fun getExampleLines() = listOf(
-			header(LootRule.ALL, vanguardShaft = false),
-			corpseLine(CorpseType.LAPIS, 2, hasKey = true),
-			corpseLine(CorpseType.UMBER, 1, hasKey = false),
-			fossilLine,
+			header,
+			line(Todo.Corpse(CorpseType.LAPIS, 2, hasKey = true)),
+			line(Todo.Corpse(CorpseType.UMBER, 1, hasKey = false)),
+			line(Todo.Fossil),
+			line(Todo.GrabCrystal(CrystalType.JASPER)),
 		)
 	}
 }

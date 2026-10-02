@@ -2,14 +2,12 @@ package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 import io.github.tunnelvisionmod.tunnelvision.config.LootMode
 
-enum class LootRule(private val label: String, private val types: Set<CorpseType>) {
-	ALL("all corpses", CorpseType.entries.toSet()),
-	LAPIS("Lapis only", setOf(CorpseType.LAPIS)),
-	LAPIS_AND_VANGUARD("Lapis + Vanguard", setOf(CorpseType.LAPIS, CorpseType.VANGUARD));
+enum class LootRule(private val types: Set<CorpseType>) {
+	ALL(CorpseType.entries.toSet()),
+	LAPIS(setOf(CorpseType.LAPIS)),
+	LAPIS_AND_VANGUARD(setOf(CorpseType.LAPIS, CorpseType.VANGUARD));
 
 	fun includes(type: CorpseType) = type in types
-
-	fun label(vanguardShaft: Boolean): String = if (this == LAPIS_AND_VANGUARD && !vanguardShaft) LAPIS.label else label
 }
 
 object CorpseLoot {
