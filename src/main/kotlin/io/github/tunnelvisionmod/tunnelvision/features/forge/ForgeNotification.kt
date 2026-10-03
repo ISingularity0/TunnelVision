@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.forge
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.DisconnectEvent
@@ -50,9 +51,9 @@ object ForgeNotification {
 	private fun notify(items: List<String>) {
 		Debug.log { "ForgeNotification: ready $items" }
 		if (config.showTitle) {
-			mc.gui.setTimes(0, 50, 10)
-			mc.gui.setSubtitle(Component.literal(ForgeSummary.subtitle(items)).withStyle(ChatFormatting.YELLOW))
-			mc.gui.setTitle(Component.literal("FORGE READY!").withStyle(ChatFormatting.GOLD))
+			Compat.setTitleTimes(0, 50, 10)
+			Compat.setSubtitle(Component.literal(ForgeSummary.subtitle(items)).withStyle(ChatFormatting.YELLOW))
+			Compat.setTitle(Component.literal("FORGE READY!").withStyle(ChatFormatting.GOLD))
 		}
 		if (config.sendChat) {
 			val verb = if (items.size == 1) "is" else "are"

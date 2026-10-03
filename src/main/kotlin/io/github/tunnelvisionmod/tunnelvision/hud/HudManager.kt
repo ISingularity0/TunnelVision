@@ -3,6 +3,7 @@ package io.github.tunnelvisionmod.tunnelvision.hud
 import io.github.notenoughupdates.moulconfig.managed.ManagedDataFile
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.utils.SkyBlock
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
 import net.fabricmc.loader.api.FabricLoader
@@ -48,7 +49,7 @@ object HudManager {
 	fun save() = data.saveToFile()
 
 	fun openEditor() {
-		mc.schedule { mc.setScreen(HudEditorScreen()) }
+		mc.schedule { Compat.setScreen(HudEditorScreen()) }
 	}
 
 	fun bounds(widget: HudWidget, lines: List<Component>, screenWidth: Int, screenHeight: Int): HudBounds {
@@ -77,7 +78,7 @@ object HudManager {
 	}
 
 	private fun render(graphics: GuiGraphicsExtractor) {
-		if (!SkyBlock.isOnSkyBlock || mc.screen is HudEditorScreen) return
+		if (!SkyBlock.isOnSkyBlock || Compat.screen is HudEditorScreen) return
 		enabledWidgets.forEach { draw(graphics, it, it.getLines()) }
 	}
 }

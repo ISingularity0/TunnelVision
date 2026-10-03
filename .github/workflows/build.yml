@@ -10,8 +10,13 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-version:
+    name: build (${{ matrix.mc }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ['26.1.2', '26.2']
     steps:
       - uses: actions/checkout@v7
 
@@ -24,9 +29,15 @@ jobs:
 
       - run: chmod +x ./gradlew
 
-      - run: ./gradlew build
+      - run: ./gradlew build -Pmc=${{ matrix.mc }}
 
       - uses: actions/upload-artifact@v7
         with:
-          name: TunnelVision
-          path: build/libs/*.jar
+          name: TunnelVision-${{ matrix.mc }}
+          path: build/libs/TunnelVision-*-${{ matrix.mc }}.jar
+
+  build:
+    needs: build-version
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Both Minecraft versions built"

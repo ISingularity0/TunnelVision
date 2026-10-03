@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
 import io.github.tunnelvisionmod.tunnelvision.events.RightClickEvent
@@ -55,8 +56,8 @@ object BlueCheeseCorpseLock {
 		lastWarning = now
 		Debug.log { "BlueCheeseCorpseLock: blocked looting $corpse corpse while not holding blue cheese drill" }
 		if (config.showTitle) {
-			mc.gui.setTimes(0, 20, 5)
-			mc.gui.setTitle(Component.literal("Blue Cheese!").withStyle(ChatFormatting.RED))
+			Compat.setTitleTimes(0, 20, 5)
+			Compat.setTitle(Component.literal("Blue Cheese!").withStyle(ChatFormatting.RED))
 		}
 		if (config.playSound) {
 			mc.soundManager.play(SimpleSoundInstance.forUI(SoundEvents.VILLAGER_NO, 1f))

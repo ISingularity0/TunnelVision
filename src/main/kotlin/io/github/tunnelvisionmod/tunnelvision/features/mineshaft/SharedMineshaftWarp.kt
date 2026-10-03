@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
@@ -39,7 +40,7 @@ object SharedMineshaftWarp {
 
 	private fun onTick() {
 		if (!config.enabled || !SkyBlock.isOnSkyBlock) return
-		if (!KeyUtils.wasClicked(config.warpKey) || mc.screen != null) return
+		if (!KeyUtils.wasClicked(config.warpKey) || Compat.screen != null) return
 		if (!window.isOpen(System.currentTimeMillis(), config.windowSeconds)) return
 		window.close()
 		Debug.log { "SharedMineshaftWarp: sending !w" }
@@ -56,9 +57,9 @@ object SharedMineshaftWarp {
 		}
 		val name = "${shared.type.displayName} Mineshaft"
 		if (config.showTitle) {
-			mc.gui.setTimes(0, 60, 10)
-			mc.gui.setSubtitle(Component.literal(hint).withStyle(ChatFormatting.YELLOW))
-			mc.gui.setTitle(Component.literal(name).withStyle(shared.type.color))
+			Compat.setTitleTimes(0, 60, 10)
+			Compat.setSubtitle(Component.literal(hint).withStyle(ChatFormatting.YELLOW))
+			Compat.setTitle(Component.literal(name).withStyle(shared.type.color))
 		}
 		val corpses = shared.corpses?.let { " ($it)" } ?: ""
 		ChatUtils.send(

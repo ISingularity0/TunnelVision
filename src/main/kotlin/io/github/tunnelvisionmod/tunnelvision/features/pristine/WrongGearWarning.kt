@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.pristine
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
@@ -48,8 +49,8 @@ object WrongGearWarning {
 				),
 		)
 		if (config.showTitle) {
-			mc.gui.setTimes(0, 20, 5)
-			mc.gui.setTitle(Component.literal("Wrong Gear!").withStyle(ChatFormatting.RED))
+			Compat.setTitleTimes(0, 20, 5)
+			Compat.setTitle(Component.literal("Wrong Gear!").withStyle(ChatFormatting.RED))
 		}
 		if (config.playSound) {
 			mc.soundManager.play(SimpleSoundInstance.forUI(SoundEvents.VILLAGER_NO, 1f))

@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
@@ -69,7 +70,7 @@ object RouteRunner {
 		val target = waypoints.getOrNull(index) ?: return
 		waypoints.getOrNull(index - 1)?.let { renderWaypoint(context, it, index - 1, PREVIOUS_COLOR, PREVIOUS_FILL_ALPHA, player.eyePosition) }
 		val box = renderWaypoint(context, target, index, TARGET_COLOR, FILL_ALPHA, player.eyePosition)
-		val crosshair = mc.gameRenderer.mainCamera.position().add(player.getViewVector(1f).scale(CROSSHAIR_DISTANCE))
+		val crosshair = Compat.camera.position().add(player.getViewVector(1f).scale(CROSSHAIR_DISTANCE))
 		WorldRender.lines(context, listOf(crosshair to box.center), TARGET_COLOR, throughWalls = true)
 	}
 

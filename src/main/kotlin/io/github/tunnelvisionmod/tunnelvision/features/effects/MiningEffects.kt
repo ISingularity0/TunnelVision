@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.effects
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
@@ -60,7 +61,7 @@ object MiningEffects {
 	}
 
 	private fun readEffectsMenu(now: Long) {
-		val screen = mc.screen as? AbstractContainerScreen<*> ?: return
+		val screen = Compat.screen as? AbstractContainerScreen<*> ?: return
 		if (!EffectParser.isEffectsMenu(screen.title.string.removeFormatting().trim())) return
 		for (slot in screen.menu.slots) {
 			val item = slot.item
@@ -73,8 +74,8 @@ object MiningEffects {
 	private fun onExpired(effect: MiningEffect) {
 		Debug.log { "MiningEffects: ${effect.displayName} expired" }
 		if (!config.showExpiredTitle || !SkyBlock.isOnMiningIsland) return
-		mc.gui.setTimes(0, 50, 10)
-		mc.gui.setTitle(Component.literal("${effect.displayName} expired!").withStyle(ChatFormatting.RED))
+		Compat.setTitleTimes(0, 50, 10)
+		Compat.setTitle(Component.literal("${effect.displayName} expired!").withStyle(ChatFormatting.RED))
 	}
 
 	private fun onChat(event: ChatReceivedEvent) {

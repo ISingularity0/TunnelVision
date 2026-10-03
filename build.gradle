@@ -6,12 +6,18 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.serialization' version "${kotlin_version}"
 }
 
+def versionProperties = new Properties()
+file("versions/${project.mc}.properties").withInputStream { versionProperties.load(it) }
+versionProperties.each { key, value -> project.ext.set(key, value) }
+
 version = project.mod_version
 group = project.maven_group
 
 base {
 	archivesName = project.archives_base_name
 }
+
+sourceSets.main.kotlin.srcDir("src/compat/${project.compat}/kotlin")
 
 repositories {
 	maven { url = "https://maven.notenoughupdates.org/releases/" }
@@ -31,8 +37,8 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	implementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-	implementation "org.notenoughupdates.moulconfig:modern-26.1:${project.moulconfig_version}"
-	include "org.notenoughupdates.moulconfig:modern-26.1:${project.moulconfig_version}"
+	implementation "org.notenoughupdates.moulconfig:${project.moulconfig_artifact}:${project.moulconfig_version}"
+	include "org.notenoughupdates.moulconfig:${project.moulconfig_artifact}:${project.moulconfig_version}"
 
 	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
 	localRuntime "maven.modrinth:modmenu:${project.modmenu_version}"
@@ -57,10 +63,15 @@ loom {
 
 processResources {
 	inputs.property "version", project.version
+	inputs.property "minecraft_range", project.minecraft_range
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand "version": project.version, "minecraft_range": project.minecraft_range
 	}
+}
+
+tasks.withType(Jar).configureEach {
+	archiveVersion = "v${project.mod_version}-${project.mc}"
 }
 
 tasks.withType(JavaCompile).configureEach {
