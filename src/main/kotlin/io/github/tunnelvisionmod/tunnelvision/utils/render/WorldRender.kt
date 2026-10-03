@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexFormat
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext
 import net.minecraft.client.gui.Font
 import net.minecraft.client.renderer.RenderPipelines
@@ -42,7 +43,7 @@ object WorldRender {
 	private val filledThroughWallsPipeline: RenderPipeline = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 			.withLocation(Identifier.fromNamespaceAndPath(TunnelVision.MOD_ID, "pipeline/filled_through_walls"))
-			.withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
+			.let { Compat.quads(it, DefaultVertexFormat.POSITION_COLOR) }
 			.withCull(false)
 			.withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
 			.withDepthStencilState(DepthStencilState(CompareOp.ALWAYS_PASS, false))
@@ -51,15 +52,15 @@ object WorldRender {
 
 	private val linesThroughWalls: RenderType = RenderType.create(
 		"${TunnelVision.MOD_ID}_lines_through_walls",
-		RenderSetup.builder(linesThroughWallsPipeline).bufferSize(RenderType.TRANSIENT_BUFFER_SIZE).createRenderSetup()
+		RenderSetup.builder(linesThroughWallsPipeline).let { Compat.transientBuffer(it) }.createRenderSetup()
 	)
 
 	private val filledThroughWalls: RenderType = RenderType.create(
 		"${TunnelVision.MOD_ID}_filled_through_walls",
-		RenderSetup.builder(filledThroughWallsPipeline).bufferSize(RenderType.TRANSIENT_BUFFER_SIZE).sortOnUpload().createRenderSetup()
+		RenderSetup.builder(filledThroughWallsPipeline).let { Compat.transientBuffer(it) }.sortOnUpload().createRenderSetup()
 	)
 
-	private val camera get() = mc.gameRenderer.mainCamera.position()
+	private val camera get() = Compat.camera.position()
 
 	fun outline(context: LevelRenderContext, box: AABB, color: Int, throughWalls: Boolean) {
 		val renderType = if (throughWalls) linesThroughWalls else RenderTypes.lines()
@@ -128,7 +129,7 @@ object WorldRender {
 		val poseStack = context.poseStack()
 		poseStack.pushPose()
 		poseStack.translate(pos.x - cameraPos.x, pos.y - cameraPos.y, pos.z - cameraPos.z)
-		poseStack.mulPose(mc.gameRenderer.mainCamera.rotation())
+		poseStack.mulPose(Compat.camera.rotation())
 		poseStack.scale(scale, -scale, scale)
 		val chars = text.visualOrderText
 		context.submitNodeCollector().submitText(

@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.crystals
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
@@ -135,7 +136,7 @@ object CrystalNotifications {
 
 		if (testOverride && !ConfigManager.config.dev.debugMode) endTesting()
 		if (!testOverride) readHotmMenu()
-		val menuTitle = (mc.screen as? AbstractContainerScreen<*>)?.title?.string?.removeFormatting()?.trim()
+		val menuTitle = (Compat.screen as? AbstractContainerScreen<*>)?.title?.string?.removeFormatting()?.trim()
 		val inForgeMenu = menuTitle != null && (menuTitle in forgeMenuTitles || menuTitle.startsWith(FORGE_SELECT_PREFIX))
 		ticksSinceMenu = if (inForgeMenu) 0 else (ticksSinceMenu + 1).coerceAtMost(FORGE_MENU_WINDOW_TICKS + 1)
 		readForge()
@@ -149,7 +150,7 @@ object CrystalNotifications {
 	 * says replaces what chat and the forge could tell us.
 	 */
 	private fun readHotmMenu() {
-		val screen = mc.screen as? AbstractContainerScreen<*> ?: return
+		val screen = Compat.screen as? AbstractContainerScreen<*> ?: return
 		if (HOTM_TITLE !in screen.title.string.removeFormatting()) return
 		val items = screen.menu.slots.map { it.item }.filter { !it.isEmpty }
 		val lore = items.firstOrNull { it.plainName() == CrystalParser.HOTM_ITEM }?.loreLines()
@@ -238,10 +239,10 @@ object CrystalNotifications {
 	private fun announceAvailable(carried: Set<CrystalType>) {
 		if (!config.enabled || !config.availableTitle) return
 		Debug.log { "Crystals: available " + carried.map { it.displayName } }
-		mc.gui.setTimes(0, 60, 10)
+		Compat.setTitleTimes(0, 60, 10)
 		// The crystals move to the subtitle: the title says what to do, the subtitle says with what.
-		mc.gui.setSubtitle(crystalNames(carried))
-		mc.gui.setTitle(Component.literal("Forge Crystal").withStyle(ChatFormatting.GOLD))
+		Compat.setSubtitle(crystalNames(carried))
+		Compat.setTitle(Component.literal("Forge Crystal").withStyle(ChatFormatting.GOLD))
 		playSound()
 	}
 

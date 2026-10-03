@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.utils
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
 import io.github.tunnelvisionmod.tunnelvision.mixin.PlayerTabOverlayAccessor
@@ -21,7 +22,7 @@ object TabList {
 			footerLines = emptyList()
 			return
 		}
-		val overlay = mc.gui.tabList as PlayerTabOverlayAccessor
+		val overlay = Compat.tabList as PlayerTabOverlayAccessor
 		lines = overlay.`tunnelvision$getPlayerInfos`().mapNotNull { info ->
 			info.tabListDisplayName?.string?.removeFormatting()?.trim()?.takeIf { it.isNotEmpty() }
 		}

@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.BazaarPriceType
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
@@ -69,9 +70,9 @@ object MineshaftValueAlert {
 			else -> "$price · fewer than ${GemstoneShaft.MIN_CORPSES} corpses"
 		}
 		val details = Component.literal(reason).withStyle(ChatFormatting.GRAY)
-		mc.gui.setTimes(0, 60, 10)
-		mc.gui.setSubtitle(details)
-		mc.gui.setTitle(headline)
+		Compat.setTitleTimes(0, 60, 10)
+		Compat.setSubtitle(details)
+		Compat.setTitle(headline)
 		if (config.sendChat) ChatUtils.send(headline.copy().append(Component.literal(" ")).append(details))
 	}
 }

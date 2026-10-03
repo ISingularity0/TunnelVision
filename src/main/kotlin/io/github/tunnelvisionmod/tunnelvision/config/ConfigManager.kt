@@ -5,6 +5,7 @@ import io.github.notenoughupdates.moulconfig.gui.GuiElementComponent
 import io.github.notenoughupdates.moulconfig.managed.ManagedConfig
 import io.github.notenoughupdates.moulconfig.platform.MoulConfigScreenComponent
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
@@ -33,6 +34,6 @@ object ConfigManager {
 		}
 
 	fun openScreen() {
-		TunnelVision.mc.schedule { TunnelVision.mc.setScreen(createScreen(null)) }
+		TunnelVision.mc.schedule { Compat.setScreen(createScreen(null)) }
 	}
 }

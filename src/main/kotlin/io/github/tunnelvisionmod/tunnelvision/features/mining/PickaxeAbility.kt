@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mining
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
@@ -105,8 +106,8 @@ object PickaxeAbility {
 		val name = ability ?: return
 		Debug.log { "PickaxeAbility: $name ready" }
 		if (config.showTitle) {
-			mc.gui.setTimes(0, 50, 10)
-			mc.gui.setTitle(Component.literal("${name.uppercase()}!").withStyle(ChatFormatting.GOLD))
+			Compat.setTitleTimes(0, 50, 10)
+			Compat.setTitle(Component.literal("${name.uppercase()}!").withStyle(ChatFormatting.GOLD))
 		}
 		if (config.playSound) {
 			mc.soundManager.play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f))

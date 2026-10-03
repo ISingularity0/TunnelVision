@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mining
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
 import io.github.tunnelvisionmod.tunnelvision.events.DisconnectEvent
@@ -76,8 +77,8 @@ object MineshaftDetection {
 		if (!config.announceEntry) return
 		ChatUtils.send(Component.literal(mineshaft.displayName).withStyle(mineshaft.color))
 		if (config.showTitle) {
-			mc.gui.setTimes(0, 50, 10)
-			mc.gui.setTitle(Component.literal(mineshaft.displayName).withStyle(mineshaft.color))
+			Compat.setTitleTimes(0, 50, 10)
+			Compat.setTitle(Component.literal(mineshaft.displayName).withStyle(mineshaft.color))
 		}
 	}
 

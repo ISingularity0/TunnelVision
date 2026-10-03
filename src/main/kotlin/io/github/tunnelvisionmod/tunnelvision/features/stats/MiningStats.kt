@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.stats
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.ClientTickEvent
@@ -56,7 +57,7 @@ object MiningStats {
 
 	private fun onTick() {
 		if (!config.enabled || !SkyBlock.isOnSkyBlock) return
-		val screen = mc.screen as? AbstractContainerScreen<*> ?: return
+		val screen = Compat.screen as? AbstractContainerScreen<*> ?: return
 		if (HOTM_TITLE !in screen.title.string.removeFormatting()) return
 		val item = screen.menu.slots.map { it.item }.firstOrNull { !it.isEmpty && it.plainName() == SKY_MALL_ITEM } ?: return
 		val buff = MiningStatsParser.parseSkyMallItem(item.loreLines()) ?: return

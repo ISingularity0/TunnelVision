@@ -1,6 +1,7 @@
 package io.github.tunnelvisionmod.tunnelvision.features.mineshaft
 
 import io.github.tunnelvisionmod.tunnelvision.TunnelVision.mc
+import io.github.tunnelvisionmod.tunnelvision.compat.Compat
 import io.github.tunnelvisionmod.tunnelvision.config.ConfigManager
 import io.github.tunnelvisionmod.tunnelvision.events.ChatReceivedEvent
 import io.github.tunnelvisionmod.tunnelvision.events.EventBus
@@ -31,7 +32,7 @@ object LanternReminder {
 		val text = Component.literal("Place your ${lantern.itemName}!").withStyle(ChatFormatting.YELLOW)
 		ChatUtils.send(text)
 		val typeConfig = ConfigManager.config.mineshaft.mineshaftType
-		if (typeConfig.announceEntry && typeConfig.showTitle) mc.gui.setSubtitle(text)
+		if (typeConfig.announceEntry && typeConfig.showTitle) Compat.setSubtitle(text)
 	}
 
 	private fun onChat(event: ChatReceivedEvent) {
@@ -39,8 +40,8 @@ object LanternReminder {
 		val lantern = Lantern.fromDespawnMessage(event.text) ?: return
 		Debug.log { "LanternReminder: $lantern despawned" }
 		val text = Component.literal("${lantern.itemName} expired!").withStyle(ChatFormatting.YELLOW)
-		mc.gui.setTimes(0, 40, 10)
-		mc.gui.setTitle(text)
+		Compat.setTitleTimes(0, 40, 10)
+		Compat.setTitle(text)
 		if (config.playSound) mc.soundManager.play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, 1f))
 	}
 }
